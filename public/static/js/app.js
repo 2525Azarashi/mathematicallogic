@@ -25,8 +25,8 @@ document.body.append(h('footer.foot', h('div.wrap.foot-in',
 // ---------- command palette ----------
 const items = [
   ...LECTURES.flatMap((l) => [
-    { k: `第${l.no}回`, t: l.title, href: `#/lec/${l.slug}` },
-    ...l.chapters.map((c) => ({ k: `第${l.no}回`, t: c.title, href: `#/lec/${l.slug}/${c.id}` })),
+    { k: `第${l.no}回`, t: l.title, href: `#/lec/${l.slug}`, kw: l.tags.join(' ') + ' ' + l.tinyFx },
+    ...l.chapters.map((c) => ({ k: `第${l.no}回`, t: c.title, href: `#/lec/${l.slug}/${c.id}`, kw: c.en })),
     { k: `第${l.no}回`, t: `演習問題 ex${l.no}`, href: `#/lec/${l.slug}/ex` },
   ]),
   { k: 'ツール', t: '論理式ラボ（構文木・真理値表・CNF・Wang）', href: '#/tools' },
@@ -40,12 +40,12 @@ document.body.append(pal)
 let palSel = 0
 function drawPal() {
   const q = palIn.value.trim().toLowerCase()
-  const hit = items.filter((i) => !q || (i.k + i.t).toLowerCase().includes(q)).slice(0, 30)
+  const hit = items.filter((i) => !q || (i.k + i.t + (i.kw || '')).toLowerCase().includes(q)).slice(0, 30)
   palSel = Math.min(palSel, Math.max(0, hit.length - 1))
   palList.innerHTML = ''
   hit.forEach((i, k) => palList.append(h('li', h('a', { href: i.href, class: k === palSel ? 'on' : '', onclick: closePal }, h('span.k', i.k), i.t))))
 }
-function openPal() { pal.classList.add('on'); palIn.value = ''; palSel = 0; drawPal(); setTimeout(() => palIn.focus(), 30) }
+function openPal() { pal.classList.add('on'); palIn.value = ''; palSel = 0; drawPal(); palIn.focus() }
 function closePal() { pal.classList.remove('on') }
 palIn.addEventListener('input', () => { palSel = 0; drawPal() })
 palIn.addEventListener('keydown', (e) => {
