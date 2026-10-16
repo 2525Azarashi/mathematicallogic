@@ -74,9 +74,17 @@ S[happy]: まずは自分で。詰まったら「ヒント」、それでもダ�
   }
   addEventListener('scroll', onScroll, { passive: true })
   root._cleanup = () => removeEventListener('scroll', onScroll)
-  function jump(id) {
+  // content-visibility makes off-screen heights estimates, so: instant jump, then re-correct until stable
+  function jump(id, smooth = true) {
     const t = document.getElementById('c-' + id)
-    if (t) { scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); history.replaceState(null, '', `#/lec/${lec.slug}/${id}`) }
+    if (!t) return
+    history.replaceState(null, '', `#/lec/${lec.slug}/${id}`)
+    const target = () => t.getBoundingClientRect().top + scrollY - 80
+    if (smooth && Math.abs(t.getBoundingClientRect().top) < innerHeight * 1.5) { scrollTo({ top: target(), behavior: 'smooth' }); return }
+    let n = 0
+    const fix = () => { const y = target(); if (Math.abs(y - scrollY) > 2) scrollTo(0, y); if (++n < 14) requestAnimationFrame(() => setTimeout(fix, 60)) }
+    fix()
   }
-  if (anchor) setTimeout(() => jump(anchor), 80)
+  root._jump = (id) => jump(id)
+  if (anchor) requestAnimationFrame(() => jump(anchor, false))
 }

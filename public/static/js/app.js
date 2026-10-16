@@ -66,6 +66,7 @@ let first = true
 function route() {
   const [, page, a, b] = (location.hash || '#/').split('/')
   if (app._cleanup) { app._cleanup(); app._cleanup = null }
+  app._jump = null
   const render = () => {
     app.innerHTML = ''
     document.documentElement.style.removeProperty('--lec'); document.documentElement.style.removeProperty('--lec-l')
@@ -92,7 +93,7 @@ let lastKey = ''
 addEventListener('hashchange', () => {
   const [, page, a] = location.hash.split('/')
   const key = `${page}/${a}`
-  if (key === lastKey && page === 'lec') { const [, , , b] = location.hash.split('/'); const t = document.getElementById('c-' + b); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return }
+  if (key === lastKey && page === 'lec') { const [, , , b] = location.hash.split('/'); if (b && app._jump) app._jump(b); return }
   lastKey = key
   initCursor()
 route()

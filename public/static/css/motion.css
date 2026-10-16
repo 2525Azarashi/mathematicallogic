@@ -3,7 +3,9 @@
    ========================================================= */
 
 /* ---------- kinetic chars ---------- */
-.is-split .ch { display: inline-block; will-change: transform; }
+.is-split .ch { display: inline-block; }
+/* skip layout/paint of off-screen chapters (big perf win on long lecture pages) */
+.chap:not(:first-child) { content-visibility: auto; contain-intrinsic-size: auto 1600px; }
 .kt .ch { transform: translateY(110%) rotate(8deg); opacity: 0; transition: transform .8s var(--ease), opacity .5s var(--ease-out); transition-delay: calc(var(--i) * 28ms); }
 .kt.kt-pop .ch { transform: scale(0) rotate(-20deg); }
 .kt.kt-drop .ch { transform: translateY(-120%) rotate(-10deg); }
