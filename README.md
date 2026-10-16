@@ -1,21 +1,44 @@
-```txt
-npm install
-npm run dev
-```
+# Tiny Tautology — 数理論理学 2026 の遊び場
 
-```txt
-npm run deploy
-```
+「数理論理学（2026年度）」の理解を深めるための非公式学習サイト。
+**サカイ（先輩・解説役）** と **リョウガ（受講生・質問役）** の対話で進み、各章に「さわれるラボ」があります。直感 → 形式化の順で学べる構成です。
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+## 公開中の内容
+| 回 | 日付 | 内容 | 主なラボ |
+|---|---|---|---|
+| 1 | 09/25 | はじめに，集合と関係 | 自然数の集合塗り＋ベン図／べき集合スイッチ／全域関数スライダー |
+| 2 | 10/02 | 命題論理 — 言語，構文論，意味論 | 論理記号スイッチ／論理式判定＋構文木／優先順位クイズ／解釈で木を評価／真理値表を1列ずつ／恒真・充足の仕分け／A と ¬A の鏡／同値チェッカー |
+| 3 | 10/09 | 命題論理 — 導出（融合）原理 | ⊃ の「約束」／CNF 変換ステッパー／導出ボード（導出の木つき）／前提＋¬G→⊥ のパイプライン |
+| 4 | 10/16 | 命題論理 — シーケント計算 | シーケント→論理式翻訳／どの推論規則？クイズ／証明図ビルダー（Wang のアルゴリズム・反例表示） |
 
-```txt
-npm run cf-typegen
-```
+各回の構成：対話チャプター → 公式演習問題（ヒント → 解答例の2段階）→ 類題クイズ（正解すると解説、ブラウザに記録）
 
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
+## URL（ハッシュルーティング）
+- `/#/` ホーム（ヒーローの式で ⊤/⊥ を切り替え、締切表示、講義一覧、全体マップ）
+- `/#/lec/lec01` 〜 `/#/lec/lec04` 各回（`/#/lec/lec03/res` のように章 ID を付けると直接ジャンプ、`/ex` 演習、`/quiz` 類題）
+- `/#/tools` 論理式ラボ（構文木・真理値表・CNF・Wang 証明図）
+- `/#/sheet` チートシート ／ `/#/glossary` 用語集
+- `/` キー or ⌘K でサイト内検索
 
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+## 技術構成
+- Hono（Cloudflare Pages）がシェル HTML を返し、`public/static/` の ES モジュールで描画（ビルド不要の素の JS）
+- `js/logic/core.js` — 論理エンジン：パーサ（講義の優先順位 ¬>∧>∨>⊃・左結合）、真理値表、恒真判定、CNF 段階変換、導出・反駁、LK の分解と Wang のアルゴリズム
+- `js/widgets/` — 式入力（記号キーボード・エラー位置表示）、構文木 SVG、真理値表、CNF ステッパー、導出ボード、証明図ビルダー、クイズ
+- `js/lib/chars.js` — キャラクター SVG（表情5種）とマスコット「トト」（⊤ の形、偽になると逆さまになって ⊥ になる）
+- データ保存：localStorage のみ（既読章・クイズの正解状況）。サーバー側のストレージはなし
+
+## デザイン
+クリーム色のドット紙、インク色の太い輪郭線、ステッカー風のずらし影。フォントは Fredoka と Zen Maru Gothic。
+色にはそれぞれ意味を持たせています：⊤ = ミント、⊥ = ピンク、¬ オレンジ・∧ 青・∨ 黄・⊃ 紫。各回にもテーマ色があります。
+
+## 新しい回を追加する
+1. `public/static/js/lectures/lec05.js` を作成（lec04.js を参考に `no, slug, date, color, colorL, title, sub, tags, tinyFx, chapters[{id,title,en,build(el)}], exercises, quiz` を export default）
+2. 本文は `talk(\`R: 質問\nS: 解説 $論理式$ **強調**\`)` で書く。`S[happy]:` で表情を指定（normal/happy/think/oops/wow）
+3. `lectures/index.js` の `LECTURES` に追加し、`UPCOMING` から外す
+
+## 未実装・今後
+- 第5回以降（健全性と完全性、1階述語論理…）は講義プリントが届いた時点で追加
+- 述語論理用の拡張（量化子のパース、単一化ラボ、エルブラン宇宙の可視化）
+- デプロイ：未実施（Cloudflare Pages / Hosted のどちらで公開するか選択が必要）
+
+最終更新：2026-10-16
