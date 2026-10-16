@@ -1,12 +1,29 @@
 import { Hono } from 'hono'
-import { renderer } from './renderer'
 
 const app = new Hono()
 
-app.use(renderer)
+const page = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiny Tautology — 数理論理学 2026 の遊び場</title>
+<meta name="description" content="数理論理学（命題論理・述語論理）を、サカイ先輩とリョウガくんの対話と、さわれるラボで直感的に学ぶ非公式学習サイト。">
+<meta name="theme-color" content="#fff8ef">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect x='2' y='2' width='36' height='36' rx='12' fill='%23ffd23f' stroke='%232b2452' stroke-width='2.4'/><path d='M10 11 h20 M20 11 v18' stroke='%232ec486' stroke-width='5' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+<a class="sr" href="#app">本文へスキップ</a>
+<main id="app"></main>
+<noscript><p style="padding:40px;text-align:center">このサイトは JavaScript を使ってラボを動かしています。JavaScript を有効にしてください。</p></noscript>
+<script type="module" src="/static/js/app.js"></script>
+</body>
+</html>`
 
-app.get('/', (c) => {
-  return c.render(<h1>Hello!</h1>)
-})
+app.get('/', (c) => c.html(page))
 
 export default app
