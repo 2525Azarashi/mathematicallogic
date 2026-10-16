@@ -1,5 +1,6 @@
 import { avatar } from './chars.js'
 import { show } from '../logic/core.js'
+import { typeIn, REDUCED } from './motion.js'
 
 // ---------- tiny hyperscript ----------
 // h('div.cls#id', {attrs}, ...children)
@@ -195,8 +196,19 @@ export function observeReveal(root = document) {
     if (!e.isIntersecting) return
     const el = e.target
     el.classList.add('in')
-    // stagger dialogue bubbles
-    $$('.say.will-pop', el).forEach((b, i) => { b.style.animationDelay = i * 0.12 + 's'; b.classList.add('pop'); b.classList.remove('will-pop') })
+    // dialogue: bubbles appear one after another, text "types" in
+    let t = 0
+    $$('.say.will-pop', el).forEach((b) => {
+      const at = t
+      setTimeout(() => {
+        b.classList.add('pop', 'speaking'); b.classList.remove('will-pop')
+        const bub = b.querySelector('.bubble')
+        const d = bub ? typeIn(bub, { cps: 140 }) : 0
+        setTimeout(() => b.classList.remove('speaking'), d + 200)
+      }, at)
+      const len = (b.textContent || '').length
+      t += REDUCED ? 0 : Math.min(950, 260 + len * 7)
+    })
     io.unobserve(el)
   }), { rootMargin: '0px 0px -8% 0px', threshold: 0.05 })
   $$('.reveal:not(.in), .talk', root).forEach((el) => io.observe(el))

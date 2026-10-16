@@ -5,10 +5,11 @@ import { homePage } from './pages/home.js'
 import { lecturePage } from './pages/lecture.js'
 import { toolsPage } from './pages/tools.js'
 import { glossaryPage, sheetPage } from './pages/reference.js'
+import { animateRoot, pageWipe, initCursor, intro, splitChars } from './lib/motion.js'
 
 const app = $('#app')
 const nav = h('header.nav', h('div.wrap.nav-in',
-  h('a.brand', { href: '#/', html: BRAND + '<span>Tiny Tautology<small>数理論理学 2026 の遊び場</small></span>' }),
+  h('a.brand.wave-hover', { href: '#/', html: BRAND + '<span><span class="bt">Tiny Tautology</span><small>数理論理学 2026 の遊び場</small></span>' }),
   h('nav.nav-links', { id: 'nav-links' },
     h('a', { href: '#/', dataset: { r: 'home' } }, 'ホーム'),
     h('a', { href: `#/lec/${LECTURES[LECTURES.length - 1].slug}`, dataset: { r: 'lec' } }, '講義'),
@@ -18,6 +19,7 @@ const nav = h('header.nav', h('div.wrap.nav-in',
   h('button.nav-btn', { type: 'button', onclick: () => openPal(), 'aria-label': '検索' }, '🔍', h('span.lbl', 'さがす'), h('kbd', '/')),
   h('button.icon-btn.menu-btn', { type: 'button', 'aria-label': 'メニュー', onclick: () => $('#nav-links').classList.toggle('open') }, '☰')))
 document.body.prepend(h('div.read-bar'), nav)
+splitChars(nav.querySelector('.bt'))
 document.body.append(h('footer.foot', h('div.wrap.foot-in',
   h('div.foot-cast', h('div.avs', h('div', { html: avatar('S', 'happy') }), h('div', { html: avatar('R', 'happy') })), h('span', 'またね！ — Tiny Tautology は「数理論理学（2026年度）」の非公式学習サイトです。正式な情報は講義ページを確認してください。')),
   h('div.mono', `${LECTURES.length} lectures · ⊢ ⇔ ⊨`))))
@@ -75,11 +77,15 @@ function route() {
     else if (titles[page]) { ({ tools: toolsPage, sheet: sheetPage, glossary: glossaryPage })[page](app); document.title = `${titles[page]} — Tiny Tautology` }
     else { homePage(app); document.title = 'Tiny Tautology — 数理論理学 2026 の遊び場' }
     if (!(page === 'lec' && b)) scrollTo(0, 0)
+    const h1 = app.querySelector('[data-hero-h1]')
+    if (h1) splitChars(h1)
+    animateRoot(app, { fresh: true })
     observeReveal(app)
-    app.classList.remove('leaving'); app.classList.add('entering')
-    setTimeout(() => app.classList.remove('entering'), 500)
+    animateRoot(nav)
   }
-  if (first) { first = false; render() } else { app.classList.add('leaving'); setTimeout(render, 170) }
+  const label = page === 'lec' ? (() => { const l = LECTURES.find((x) => x.slug === a); return l ? `第${l.no}回 ${l.title.replace(/^.*— /, '')}` : '' })() : ({ tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集' })[page] || 'Tiny Tautology'
+  const color = page === 'lec' ? (LECTURES.find((x) => x.slug === a) || {}).color : null
+  if (first) { first = false; intro().then(() => {}); render() } else { pageWipe(label, color).then(render) }
 }
 // in-page chapter links like #/lec/lec02/sem shouldn't re-render when already there
 let lastKey = ''
@@ -88,7 +94,11 @@ addEventListener('hashchange', () => {
   const key = `${page}/${a}`
   if (key === lastKey && page === 'lec') { const [, , , b] = location.hash.split('/'); const t = document.getElementById('c-' + b); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return }
   lastKey = key
-  route()
+  initCursor()
+route()
+// hide nav on scroll down, show on scroll up
+let lastY = 0
+addEventListener('scroll', () => { const y = scrollY; nav.classList.toggle('hide', y > 300 && y > lastY + 4); if (y < lastY - 4 || y < 300) nav.classList.remove('hide'); lastY = y }, { passive: true })
 })
 lastKey = (() => { const [, p, a] = (location.hash || '#/').split('/'); return `${p}/${a}` })()
 route()
