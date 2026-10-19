@@ -4,6 +4,7 @@ import { LECTURES, dueOf } from '../lectures/index.js'
 import { quiz, exercise } from '../widgets/quiz.js'
 import { LEC_INFO, lecStats } from '../widgets/infographic.js'
 import { splitChars } from '../lib/motion.js'
+import { linkTerms, saveButton } from '../lib/features.js'
 
 export function lecturePage(root, slug, anchor) {
   const i = LECTURES.findIndex((l) => l.slug === slug)
@@ -48,6 +49,12 @@ S[happy]: まずは自分で。詰まったら「ヒント」、それでもダ�
   const prev = LECTURES[i - 1], nxt = LECTURES[i + 1]
   const nav = h('div.lec-next', prev ? h('a', { href: `#/lec/${prev.slug}` }, h('small', '← 前の回'), `第${prev.no}回 ${prev.title}`) : h('span'), nxt ? h('a.nx', { href: `#/lec/${nxt.slug}` }, h('small', '次の回 →'), `第${nxt.no}回 ${nxt.title}`) : h('a.nx', { href: '#/tools' }, h('small', '次の回は準備中'), '論理式ラボで遊ぶ →'))
   main.append(ex, qz, nav)
+  // ☆ あとで復習 — quiz items & exercises
+  const plain = (s) => String(s).replace(/<[^>]+>|[$*]/g, '').replace(/\s+/g, ' ').trim().slice(0, 80)
+  qz.querySelectorAll('.q').forEach((q, k) => { const it = lec.quiz[k]; if (it) q.append(h('div.q-save', saveButton({ id: `quiz:${lec.slug}:${k}`, kind: 'quiz', title: plain(it.q), sub: `第${lec.no}回 類題 Q${k + 1}`, href: `#/lec/${lec.slug}/quiz` }))) })
+  ex.querySelectorAll('.ex').forEach((e, k) => { const it = lec.exercises[k]; if (it) e.querySelector('.ex-head').append(saveButton({ id: `ex:${lec.slug}:${k}`, kind: 'formula', title: `演習 ${it.no}：` + plain(it.q), sub: `第${lec.no}回 演習問題`, href: `#/lec/${lec.slug}/ex` })) })
+  // 用語を自動リンク → タップでボトムシート
+  linkTerms(main)
 
   root.append(hero, h('div.wrap.lec-layout', toc, main))
 

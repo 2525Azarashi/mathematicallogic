@@ -5,6 +5,7 @@ import { atomFormula } from '../widgets/play.js'
 import { parse, classify, show } from '../logic/core.js'
 import { rotator, marquee } from '../lib/motion.js'
 import { timeline, gradingInfo, methodsInfo } from '../widgets/infographic.js'
+import { dailyQuestion } from '../widgets/daily.js'
 
 function heroPlay() {
   const forms = ['P ∨ ¬P', 'P ⊃ Q', 'P ∧ ¬P', '(P ⊃ Q) ∧ P ⊃ Q']
@@ -129,5 +130,5 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
       h('a.tool.reveal', { href: '#/sheet', style: { '--bg': '#fff3c2' } }, h('div.ic', '≡'), h('h3', 'チートシート'), h('p', '同値の公式・CNF の手順・LK の 8 規則を 1 枚に。試験前の見直し用。')),
       h('a.tool.reveal', { href: '#/glossary', style: { '--bg': '#d3f6e6' } }, h('div.ic', 'Aa'), h('h3', '用語集'), h('p', '「充足可能」「初期シーケント」…出てきた言葉を検索。英語つき。'))))
 
-  root.append(hero, mq, dueBar, cast, quote, principles, stats, lectures, map, tools)
+  root.append(hero, mq, dueBar, dailyQuestion(), cast, quote, principles, stats, lectures, map, tools)
 }

@@ -17,7 +17,7 @@
 - `/#/` ホーム（ヒーローの式で ⊤/⊥ を切り替え、締切表示、講義一覧、全体マップ）
 - `/#/lec/lec01` 〜 `/#/lec/lec04` 各回（`/#/lec/lec03/res` のように章 ID を付けると直接ジャンプ、`/ex` 演習、`/quiz` 類題）
 - `/#/tools` 論理式ラボ（構文木・真理値表・CNF・Wang 証明図）
-- `/#/sheet` チートシート ／ `/#/glossary` 用語集
+- `/#/sheet` チートシート ／ `/#/glossary` 用語集 ／ `/#/review` 復習リスト
 - `/` キー or ⌘K でサイト内検索
 
 ## 技術構成
@@ -45,6 +45,19 @@
   - 第3回：CNF 変換の4段パイプライン、導出の「対消滅」ループアニメ ／ 第4回：構文論と意味論の比較、シーケントの読み方
   - 各回の冒頭：チャプター数・演習数・類題数と締切までの日数バー
 - 性能：見えていない章は `content-visibility: auto` で描画を省略（長いページの初回描画を約 600ms から約 130ms に短縮）。章へのジャンプは高さ確定後に位置を補正する
+
+## UI パターン（`lib/patterns.js` + `css/patterns.css`）
+| パターン | 使っている場所 |
+|---|---|
+| **Pull to Refresh** | ホーム「今日の一問」カード：下に引っぱると別の問題（PC は ↻ ボタン） |
+| **Skeleton Screen** | ページ遷移時（ワイプ後にシマー → 本文フェードイン）、復習リストの読み込み、`lazy()` |
+| **Toast** | スタック型・種類別（ok / err / info / warn / qed）・「元に戻す」アクション・スワイプで消去 |
+| **Bottom Sheet** | 本文中の用語（点線下線）・用語集カード・検索の用語結果 → 定義／登場回／関連語。ドラッグで閉じる・全画面化、Esc、フォーカストラップ |
+| **Swipe Action** | 復習リスト：右スワイプ＝覚えた、左スワイプ＝削除（どちらも Undo トースト） |
+| **Auto Complete** | サイト内検索（あいまい一致＋ハイライト）、論理式入力（有名な式・演習の式を候補に、恒真/充足可能チップ付き、Tab で確定）、用語集検索 |
+
+- 復習リストは localStorage `tt:review`（`{id, kind, title, sub, href, at, done}`）。類題・演習・用語・今日の一問の「☆ あとで復習」から追加し、ナビの「復習」バッジに未完了数を表示します。
+- 用語データは `data/glossary.js`（GLOSS / RELATED / ALIASES）。
 
 ## 新しい回を追加する
 1. `public/static/js/lectures/lec05.js` を作成（lec04.js を参考に `no, slug, date, color, colorL, title, sub, tags, tinyFx, chapters[{id,title,en,build(el)}], exercises, quiz` を export default）

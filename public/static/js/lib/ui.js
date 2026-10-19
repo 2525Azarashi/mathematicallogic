@@ -1,6 +1,7 @@
 import { avatar } from './chars.js'
 import { show } from '../logic/core.js'
 import { typeIn, REDUCED } from './motion.js'
+import { toast as pToast } from './patterns.js'
 
 // ---------- tiny hyperscript ----------
 // h('div.cls#id', {attrs}, ...children)
@@ -180,13 +181,11 @@ export function confetti(x, y, n = 22) {
   }
 }
 export function confettiAt(el) { const r = el.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top + r.height / 2) }
-let toastEl
+// legacy string API → stacked toast (patterns.js)
 export function toast(msg) {
-  if (!toastEl) { toastEl = h('div.toast'); document.body.append(toastEl) }
-  toastEl.textContent = msg
-  toastEl.classList.add('on')
-  clearTimeout(toastEl._t)
-  toastEl._t = setTimeout(() => toastEl.classList.remove('on'), 1800)
+  if (typeof msg !== 'string') return pToast(msg)
+  const type = /Q\.E\.D|⊥ が出た/.test(msg) ? 'qed' : /^⊥|ない|もうある/.test(msg) ? 'warn' : 'info'
+  return pToast({ msg, type })
 }
 
 // ---------- reveal on scroll ----------

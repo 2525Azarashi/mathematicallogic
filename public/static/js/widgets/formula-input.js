@@ -1,5 +1,7 @@
 import { h, esc } from '../lib/ui.js'
 import { tryParse, parseSequent } from '../logic/core.js'
+import { autocomplete } from '../lib/patterns.js'
+import { formulaSource } from '../lib/features.js'
 
 // Formula input with symbol keyboard & friendly error messages.
 // opts: { value, onChange(f, src), sequent:boolean, examples:[...] , placeholder }
@@ -62,6 +64,8 @@ export function formulaInput({ value = '', onChange, sequent = false, examples =
   root.append(h('div.fin-row', h('div.fin-box', input)), keys, msg, ex)
   root.set = (v) => { input.value = v; update() }
   root.input = input
+  // auto complete: well-known formulas / laws / exercises (Tab or Enter to accept)
+  autocomplete(input, formulaSource(sequent), { onPick: (it) => root.set(it.value), max: 6 })
   queueMicrotask(update)
   return root
 }
