@@ -4,6 +4,7 @@
 **サカイ（先輩・解説役）** と **リョウガ（受講生・質問役）** の対話で進み、各章に「さわれるラボ」があります。直感 → 形式化の順で学べる構成です。
 
 - **GitHub**: https://github.com/2525Azarashi/mathematicallogic
+- **Vercel**: https://mathematicallogic.vercel.app （`main` に push すると自動デプロイ。`vercel.json` で `npm run build` → `dist/` を静的配信）
 
 ## 公開中の内容
 | 回 | 日付 | 内容 | 主なラボ |
