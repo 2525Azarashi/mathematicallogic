@@ -130,6 +130,7 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
     h('div.tools',
       h('a.tool.reveal', { href: '#/ex', style: { '--bg': '#ffe1ec' } }, h('div.ic', '✎'), h('h3', '演習解説'), h('p', 'ex1〜ex5 を「考え方の対話 → 解答例 → 採点ポイント → よくあるミス」で。最新の ex5 も。')),
       h('a.tool.reveal', { href: '#/tools', style: { '--bg': '#ece5ff' } }, h('div.ic', '⊨'), h('h3', '論理式ラボ'), h('p', '式を入れると構文木・真理値表・恒真判定・CNF・Wang の証明図まで一気に出る。')),
+      h('a.tool.reveal', { href: '#/syllabus', style: { '--bg': '#ffe8d8' } }, h('div.ic', '§'), h('h3', 'シラバス'), h('p', '授業目的・到達目標・14 回の日程・成績評価・参考文献。目標ごとに学べる場所へリンク。')),
       h('a.tool.reveal', { href: '#/sheet', style: { '--bg': '#fff3c2' } }, h('div.ic', '≡'), h('h3', 'チートシート'), h('p', '同値の公式・CNF の手順・LK の 8 規則を 1 枚に。試験前の見直し用。')),
       h('a.tool.reveal', { href: '#/glossary', style: { '--bg': '#d3f6e6' } }, h('div.ic', 'Aa'), h('h3', '用語集'), h('p', '「充足可能」「初期シーケント」…出てきた言葉を検索。英語つき。'))))
 

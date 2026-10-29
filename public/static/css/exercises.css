@@ -98,3 +98,71 @@ i.new { position: absolute; top: -9px; right: 10px; font-style: normal; font-fam
   .bl-arr { width: 100%; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) { i.new, .bl-msg.hit { animation: none; } }
+
+/* ============ 定義カード用の追加パーツ ============ */
+.defn .frac-rule { display: inline-grid; justify-items: center; vertical-align: middle; margin: 2px 10px 2px 0; font-weight: 900; font-family: var(--f-ui); }
+.frac-rule .fr-top { display: flex; gap: 22px; padding: 0 8px; }
+.frac-rule .fr-bar { width: 100%; height: 2.5px; background: var(--ink); border-radius: 2px; margin: 3px 0; }
+.defn pre.algo { background: var(--ink); color: #fff; border-radius: 14px; padding: 12px 16px; margin: 10px 0; font-size: 13.5px; line-height: 1.7; overflow-x: auto; white-space: pre; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.ded-map { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 14px; margin: 22px 0; }
+.dm-col { background: #fff; border: var(--bw) solid var(--ink); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.dm-root { align-self: flex-start; font-weight: 900; border: 2px solid var(--ink); border-radius: 999px; padding: 2px 12px; font-size: 14px; }
+.dm-root.sem { background: var(--top-l); } .dm-root.syn { background: var(--imp-l); }
+.dm-leaf { font-size: 13px; font-weight: 700; color: var(--ink-2); line-height: 1.7; }
+.dm-branch { border-left: 3px solid var(--imp); padding: 2px 0 2px 12px; display: grid; gap: 4px; }
+.dm-node { font-weight: 900; font-size: 14.5px; }
+.dm-kids { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.dm-kid { font-size: 12.5px; font-weight: 900; border: 2px dashed var(--ink-2); border-radius: 999px; padding: 2px 10px; }
+.dm-kid.on { border-style: solid; border-color: var(--ink); background: var(--imp); color: #fff; }
+@media (max-width: 760px) { .ded-map { grid-template-columns: 1fr; } }
+
+/* ============ シラバス (#/syllabus) ============ */
+.sy-title-t { display: inline-block; }
+.sy-main { max-width: 900px; padding-bottom: 60px; }
+.sy-main .chap + .chap { padding-top: 46px; }
+.sy-quote { margin: 14px 0 6px; background: #fff; border: var(--bw) solid var(--ink); border-left-width: 10px; border-left-color: var(--or); border-radius: var(--r); padding: 16px 20px; font-weight: 700; font-size: 15.5px; line-height: 2; box-shadow: var(--sh-s); }
+.sy-lead { font-weight: 700; color: var(--ink-2); font-size: 14px; margin: 14px 0 6px; }
+.sy-goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+.sy-goal { position: relative; background: #fff; border: var(--bw) solid var(--ink); border-radius: 22px; padding: 16px 18px 14px; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 6px; }
+.sy-goal .i { position: absolute; top: -14px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--or); border: 2px solid var(--ink); display: grid; place-items: center; font-family: var(--f-ui); font-weight: 700; transform: rotate(-6deg); }
+.sy-goal b { font-size: 16px; padding-right: 30px; }
+.sy-goal p { margin: 0; font-size: 13.5px; font-weight: 700; color: var(--ink-2); line-height: 1.75; flex: 1; }
+.sy-at { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.sy-at a.chip { text-decoration: none; background: var(--paper); font-size: 12px; }
+.sy-at a.chip:hover { background: var(--or-l); }
+.chip.muted { opacity: .7; background: transparent; border-style: dashed; }
+.sy-list { margin: 12px 0; padding-left: 1.3em; font-weight: 700; font-size: 14.5px; line-height: 2; }
+.sy-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.sy-mats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+.sy-mat { text-decoration: none; background: #fff; border: var(--bw) solid var(--ink); border-radius: 20px; padding: 12px 14px; display: grid; gap: 2px; box-shadow: var(--sh-s); transition: transform .25s var(--ease); }
+a.sy-mat:hover { transform: translateY(-3px); background: var(--top-l); }
+.sy-mat small { font-family: var(--f-ui); font-weight: 600; font-size: 12px; color: var(--ink-2); }
+.sy-mat b { font-size: 15.5px; }
+.sy-mat span { font-size: 12px; font-weight: 700; color: var(--top-t); }
+.sy-mat.off { box-shadow: none; border-style: dashed; background: transparent; }
+.sy-mat.off span { color: var(--ink-2); }
+.sy-sched-wrap { overflow-x: auto; margin-top: 16px; }
+.sy-sched { min-width: 560px; }
+.sy-sched td.no, .sy-sched td.dt { font-family: var(--f-ui); font-weight: 600; white-space: nowrap; }
+.sy-sched tr.live td { background: rgba(211, 246, 230, .45); }
+.sy-sched tr.exam td { background: var(--bot-l); }
+.sy-sched a.chip { text-decoration: none; color: var(--ink); white-space: nowrap; }
+.sy-books { margin: 10px 0 0; padding-left: 1.8em; display: grid; gap: 8px; }
+.sy-books li { background: #fff; border: 2px solid var(--ink); border-radius: 16px; padding: 8px 14px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: 14px; }
+.sy-books li::marker { font-family: var(--f-ui); font-weight: 700; }
+.sy-books li.easy { background: var(--and-l); }
+.sy-books .bk-t { font-weight: 900; }
+.sy-books .bk-a { font-weight: 700; color: var(--ink-2); font-size: 13px; }
+.chip.easy { background: var(--and); color: #fff; font-size: 11px; }
+.chip.note { background: var(--or-l); font-size: 11px; }
+
+/* footer links */
+.foot-links { display: flex; gap: 14px; flex-wrap: wrap; }
+.foot-links a { text-decoration: none; font-weight: 900; color: var(--ink); border-bottom: 2px solid transparent; }
+.foot-links a:hover { border-bottom-color: var(--ink); }
+
+@media (max-width: 760px) {
+  .sy-mats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sy-quote { font-size: 14.5px; padding: 14px 16px; }
+}

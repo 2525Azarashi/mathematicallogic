@@ -94,6 +94,14 @@ S: だから「意味（⊤/⊥）を計算する」のとは別に、「**記�
           html(`<div class="split reveal" style="margin:22px 0">
             <div class="panel" style="background:var(--top-l)"><h5>意味論 semantics　<span class="fx">⊨ A</span></h5><p style="margin:0;font-weight:700;font-size:14px">解釈・真偽値割り当てで「どの I でも ⊤」を確かめる。<br>道具：真理値表、（導出原理）</p></div>
             <div class="panel" style="background:var(--imp-l)"><h5>構文論 syntax　<span class="fx">⊢ A</span></h5><p style="margin:0;font-weight:700;font-size:14px">公理から推論規則を有限回使って導けるか。<br>Hilbert 型（公理が複雑）／Gentzen 型（規則で構造を分解：<b>シーケント</b>・自然演繹）</p></div></div>`),
+          defn('定義', '演繹体系・証明可能・定理', `一般に<b>公理</b>（axiom）と呼ばれる論理式から始めて，<b>推論規則</b>（inference rule）を有限回繰り返して得られる論理式を<b>証明可能</b>（provable）であるという．証明可能な式を<b>定理</b>（theorem）といい，定理を導く形式体系を<b>演繹体系</b>（deduction system）という．論理式 A が証明可能なとき $⊢ A$ と記述する．`, { en: 'deduction system' }),
+          html(`<div class="ded-map reveal" aria-label="構文論と意味論の分類">
+            <div class="dm-col"><span class="dm-root sem">意味論 semantics</span><span class="dm-leaf">モデルと真偽値割り当てに基づく</span></div>
+            <div class="dm-col"><span class="dm-root syn">構文論 syntax</span>
+              <div class="dm-branch"><span class="dm-node">Hilbert 型</span><span class="dm-leaf">公理が複雑，推論規則が単純</span></div>
+              <div class="dm-branch"><span class="dm-node">Gentzen 型</span><span class="dm-leaf">公理が単純，式の構造や論理結合子の役割を分離し推論規則として表現</span>
+                <div class="dm-kids"><span class="dm-kid on">シーケント計算 ← 今日</span><span class="dm-kid">自然演繹</span></div></div>
+            </div></div>`),
           defn('定義', '健全性と完全性 — 構文論と意味論の一致', `<b>健全性</b>（soundness）：$⊢ A$ ならば $⊨ A$。証明できるものは本当に正しい。<br><b>完全性</b>（completeness）：$⊨ A$ ならば $⊢ A$。正しいものは必ず証明できる。`),
           talk(`R: 導出原理のときと同じ言葉だ。
 S[happy]: そう。健全で完全なら、「証明できる」と「トートロジ」がぴったり一致する。今日の LK はまさにそういう体系。証明は第 5 回のテーマだよ。`),
@@ -131,6 +139,7 @@ S: 覚え方のコツがある。線の**下が結論、上が前提**。下に�
           talk(`R: 右の ∨ がカンマになるのは「右のカンマ = ∨」だからか！ 左の ∧ も「左のカンマ = ∧」。
 S[happy]: そういうこと。そしてカンマにできない組み合わせ（右の ∧ や左の ∨）は、**両方を別々に示す**しかないから枝分かれする。
 R: 左の ∨ は「場合分け」ですね。A のときも B のときも Δ が言えればいい。`),
+          defn('定義', '前提・結論', `<div class="frac-rule"><div class="fr-top"><span>S₁</span><span>S₂</span></div><div class="fr-bar"></div><div class="fr-bot">S</div></div>が LK の推論規則の一つであれば，S₁, S₂ をそれぞれ<b>前提</b>（premise），S を<b>結論</b>（conclusion）とよぶ．<p class="note">→ 横線の<b>上が前提、下が結論</b>。前提が 1 つの規則もある（S₂ がない）。</p>`, { en: 'premise, conclusion' }),
           whichRuleLab(),
           callout('tip', '演習 4.1 の答え方：「<b>○○ 規則</b>。Γ = …, Δ = …, A = …, B = …」と、規則の文字に具体的な式を対応させて書く。空のときは「Γ, Δ は空列」と明記しましょう。'),
         )
@@ -143,6 +152,8 @@ R: 左の ∨ は「場合分け」ですね。A のときも B のときも Δ 
           talk(`S: 証明図は、シーケントを規則で積み上げた木。**一番下（根）が示したいシーケント、上の葉が全部初期シーケント**なら完成。
 R: 上から組み立てるの、どこから始めればいいかわからないです…。
 S: だから**逆向き**に作る。示したいシーケントを下に置いて、論理記号を 1 つずつほどきながら上へ伸ばす。これが **Wang のアルゴリズム**。`),
+          defn('定義', '証明図', `シーケントを積み重ねた図で，それぞれのシーケントがその上にあるシーケントを前提とする推論規則の結論になっていて，上端の葉にあたる部分が<b>すべて初期シーケント</b>であるものを<b>証明図</b>（証明）という．`, { en: 'proof figure' }),
+          defn('定義', '証明可能（LK）', `シーケント S を根（証明の一番下）とするような証明図が存在するならば，S は <b>LK で証明可能</b>といい，そのときの証明図を S の証明図という．論理式 A に対して，$→ A$ が LK で証明可能ならば，A は LK で証明可能であるという．`, { en: 'provable' }),
           defn('アルゴリズム', 'Check(S) — Wang のアルゴリズム', `<ol><li>S が論理記号を含む → 推論規則を<b>逆向き</b>に使って分解し、得られた各シーケント $S₁, S₂$ に Check を行う。<b>いずれも</b>トートロジならば S はトートロジ。</li><li>S が論理記号を含まず、初期シーケント → トートロジ。</li><li>それ以外 → トートロジではない。</li></ol>`),
           talk(`R: ほどく順番は自由なんですか？
 S: どの順でも結果（トートロジかどうか）は変わらない。ただ、**枝分かれしない規則を先に**使うと木が小さくなってラクだよ。「▶ Wang に 1 手まかせる」はその戦略で選んでる。`),
