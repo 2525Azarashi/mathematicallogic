@@ -109,6 +109,9 @@ export function siteItems() { return _items || (_items = [
     { kind: `第${l.no}回`, kindCls: 'ex', t: `演習問題 ex${l.no}`, href: `#/lec/${l.slug}/ex`, kw: 'exercise 演習 レポート' },
   ]),
   ...GLOSS.map(([jp, en]) => ({ kind: '用語', kindCls: 'term', t: jp, term: jp, kw: en })),
+  { kind: '演習', kindCls: 'ex', t: '演習解説（ex1〜ex5・採点ポイント・よくあるミス）', href: '#/ex', kw: 'exercise 解説 解答 レポート answer' },
+  ...[[5, '健全性と完全性', '恒真性の保持 ¬右 意味論 Wang 5.1 5.2'], [4, 'シーケント計算', 'LK ∧左 Wang 4.1 4.2'], [3, '導出原理', '⊃ CNF 反駁 3.1 3.2 3.3'], [2, '言語・構文論・意味論', '論理式の定義 真理値表 恒真 2.1 2.2 2.3'], [1, '集合と関係', 'べき集合 全域関数 1.1 1.2 1.3']]
+    .map(([n, t, kw]) => ({ kind: '演習', kindCls: 'ex', t: `ex${n} 解説：${t}`, href: `#/ex/ex${n}`, kw })),
   { kind: 'ツール', kindCls: 'tool', t: '論理式ラボ（構文木・真理値表・CNF・Wang）', href: '#/tools', kw: 'lab tool' },
   { kind: 'ツール', kindCls: 'tool', t: '復習リスト', href: '#/review', kw: 'review bookmark あとで' },
   { kind: 'ツール', kindCls: 'tool', t: 'チートシート', href: '#/sheet', kw: 'cheat' },

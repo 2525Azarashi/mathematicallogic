@@ -1,0 +1,100 @@
+/* ============ 演習解説ページ (#/ex) ============ */
+.xp-title-t { display: inline-block; }
+.xp-due { margin-left: auto; text-decoration: none; background: var(--ink); color: #fff; border: var(--bw) solid var(--ink); border-radius: 24px; padding: 12px 18px; display: grid; line-height: 1.35; box-shadow: 4px 5px 0 #ff7aa8; transition: transform .25s var(--ease); }
+.xp-due:hover { transform: translate(-2px,-3px) rotate(-1deg); }
+.xp-due small { font-family: var(--f-ui); font-size: 11px; letter-spacing: .14em; color: #ffb3cc; }
+.xp-due b { font-size: 16px; }
+.xp-due em { font-style: normal; font-weight: 900; font-size: 13px; color: var(--or); }
+
+.xp-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px auto 34px; }
+.xp-tabs a { position: relative; flex: 1 1 150px; text-decoration: none; background: var(--cl); border: var(--bw) solid var(--ink); border-radius: 20px; padding: 10px 14px; display: grid; gap: 2px; box-shadow: var(--sh-s); transition: transform .25s var(--ease), box-shadow .25s; }
+.xp-tabs a:hover { transform: translateY(-3px); box-shadow: 3px 5px 0 var(--ink); }
+.xp-tabs a.on { background: var(--c); }
+.xp-tabs b { font-family: var(--f-ui); font-size: 20px; font-weight: 600; line-height: 1; }
+.xp-tabs span { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.xp-tabs a.on span { color: var(--ink); }
+i.new { position: absolute; top: -9px; right: 10px; font-style: normal; font-family: var(--f-ui); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; background: var(--bot); color: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 0 7px; animation: newPulse 1.8s ease-in-out infinite; }
+.toc a i.new { position: static; margin-left: auto; }
+@keyframes newPulse { 50% { transform: scale(1.1) rotate(-4deg); } }
+
+.xp-tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 22px; }
+.xp-tip { background: #fff; border: 2px solid var(--ink); border-radius: 20px; padding: 14px 16px; box-shadow: var(--sh-s); }
+.xp-tip .i { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--or); border: 2px solid var(--ink); font-family: var(--f-ui); font-weight: 700; margin-bottom: 6px; }
+.xp-tip b { display: block; font-size: 15px; }
+.xp-tip p { margin: 4px 0 0; font-size: 13px; font-weight: 700; color: var(--ink-2); line-height: 1.7; }
+
+.xp-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 18px; }
+.xp-meta .chip.tag { background: var(--accent-l); }
+.xp-meta .chip.due-open { background: var(--ink); color: #fff; }
+.xp-meta a.chip.link { text-decoration: none; background: #fff; }
+.xp-meta a.chip.link:hover { background: var(--accent-l); }
+
+.ex.xp { scroll-margin-top: 90px; }
+.ex.xp .ex-head .save-btn { margin-left: auto; }
+.xp-think { margin: 0 0 14px; border: 2px dashed var(--rule); border-radius: 20px; padding: 6px 14px 2px; background: var(--paper); }
+.xp-label { display: flex; gap: 10px; align-items: baseline; margin: 8px 0 -4px; }
+.xp-label span { font-weight: 900; font-size: 14px; background: var(--accent); border: 2px solid var(--ink); border-radius: 999px; padding: 0 12px; }
+.xp-label small { font-weight: 700; font-size: 12px; color: var(--ink-2); }
+.xp-points, .xp-miss { border-radius: 16px; padding: 12px 16px; margin-top: 8px; border: 2px solid var(--and); background: var(--and-l); }
+.xp-miss { border-color: var(--bot); background: var(--bot-l); }
+.xp-points h5, .xp-miss h5 { margin: 0 0 4px; font-size: 13px; font-weight: 900; letter-spacing: .04em; }
+.xp-points ul, .xp-miss ul { margin: 0; padding-left: 1.3em; font-weight: 700; font-size: 14px; line-height: 1.9; }
+.xp-points li::marker { content: '✓  '; color: var(--and); }
+.xp-miss li::marker { content: '✗  '; color: var(--bot-t); }
+.xp-lab { margin-top: 8px; border: 2px solid var(--ink); border-radius: 18px; padding: 16px; background: #fff; overflow-x: auto; }
+.xp-foot { margin-top: 14px; padding-top: 12px; border-top: 2px dashed var(--rule); }
+.xp-foot a { text-decoration: none; font-weight: 900; font-size: 14px; display: inline-flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.xp-foot a small { font-weight: 700; font-size: 12px; color: #fff; background: var(--ink); border-radius: 999px; padding: 0 10px; }
+.xp-foot a:hover { color: var(--accent); }
+
+/* proof text (ex5) */
+.proof-text { font-weight: 700; font-size: 14.5px; line-height: 2; }
+.proof-text p { margin: 6px 0; }
+.proof-text .pt-eq { text-align: center; font-size: 16px; background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 4px 12px; width: fit-content; margin: 8px auto; }
+.proof-text .pt-steps { margin: 6px 0; padding-left: 1.6em; }
+.proof-text .pt-steps li { margin: 4px 0; padding-left: 4px; }
+.proof-text .pt-steps li::marker { font-family: var(--f-ui); font-weight: 700; }
+.proof-text .pt-note { font-size: 12.5px; color: var(--ink-2); background: rgba(255,255,255,.6); border-radius: 12px; padding: 6px 12px; line-height: 1.8; }
+.ans.alt { background: var(--imp-l); border-color: var(--imp); }
+
+/* 5.1 lab: can the conclusion be broken? */
+.bl-lead { margin: 0 0 14px; font-weight: 700; font-size: 14.5px; }
+.tv-sws { display: flex; gap: 10px; flex-wrap: wrap; }
+.tv-sw { border: var(--bw) solid var(--ink); background: var(--bot-l); border-radius: 18px; padding: 8px 14px; display: inline-flex; gap: 10px; align-items: center; font-weight: 900; box-shadow: var(--sh-s); transition: background .25s, transform .2s var(--ease); }
+.tv-sw.on { background: var(--top-l); }
+.tv-sw:active { transform: translate(1px, 2px); box-shadow: none; }
+.tv-sw .k { font-size: 14px; }
+.bl-chain { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+.bl-c { display: inline-flex; gap: 6px; align-items: center; background: var(--paper); border: 1.5px dashed var(--ink-2); border-radius: 12px; padding: 3px 10px; font-weight: 700; font-size: 13.5px; }
+.bl-c small { font-size: 11px; color: var(--ink-2); }
+.bl-big { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.bl-box { flex: 1 1 180px; border: var(--bw) solid var(--ink); border-radius: 18px; padding: 10px 14px; display: grid; gap: 4px; justify-items: start; transition: background .3s; }
+.bl-box.t { background: var(--top-l); } .bl-box.f { background: var(--bot-l); }
+.bl-box small { font-size: 11px; font-weight: 900; letter-spacing: .1em; color: var(--ink-2); }
+.bl-box .fx { font-size: 17px; }
+.bl-arr { font-weight: 900; font-size: 13px; color: var(--ink-2); }
+.bl-msg { margin-top: 12px; font-weight: 700; font-size: 14px; border-radius: 14px; padding: 10px 14px; background: var(--or-l); line-height: 1.8; }
+.bl-msg.hit { background: var(--ink); color: #fff; animation: pop .45s var(--ease); }
+.bl-all { margin-top: 14px; }
+.bl-all summary { cursor: pointer; font-weight: 900; font-size: 13.5px; }
+.bl-all .tt-wrap { margin-top: 10px; }
+.bl-cap { font-weight: 700; font-size: 13px; color: var(--ink-2); margin: 8px 0 0; }
+
+/* link from lecture page */
+.xp-link { display: flex; gap: 14px; align-items: center; text-decoration: none; background: var(--ink); color: #fff; border: var(--bw) solid var(--ink); border-radius: 22px; padding: 12px 18px; margin: 18px 0 6px; box-shadow: 4px 5px 0 var(--accent); transition: transform .25s var(--ease); }
+.xp-link:hover { transform: translate(-2px, -3px); }
+.xp-link .ic { width: 40px; height: 40px; border-radius: 14px; background: var(--accent); color: var(--ink); display: grid; place-items: center; font-size: 20px; border: 2px solid #fff; flex: none; }
+.xp-link b { display: block; font-size: 15.5px; }
+.xp-link small { color: #cfcae6; font-weight: 700; font-size: 12.5px; }
+.xp-link .arr { margin-left: auto; font-size: 20px; }
+
+@media (max-width: 760px) {
+  .xp-due { margin-left: 0; width: fit-content; }
+  .xp-tabs { gap: 8px; }
+  .xp-tabs a { flex: 1 1 calc(50% - 8px); padding: 8px 12px; }
+  .xp-tabs a:first-child { flex-basis: 100%; }
+  .xp-tabs b { font-size: 17px; }
+  .proof-text { font-size: 14px; }
+  .bl-arr { width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { i.new, .bl-msg.hit { animation: none; } }

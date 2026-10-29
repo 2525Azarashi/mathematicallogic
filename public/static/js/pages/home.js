@@ -6,6 +6,7 @@ import { parse, classify, show } from '../logic/core.js'
 import { rotator, marquee } from '../lib/motion.js'
 import { timeline, gradingInfo, methodsInfo } from '../widgets/infographic.js'
 import { dailyQuestion } from '../widgets/daily.js'
+import { EXSETS } from '../data/exsets.js'
 
 function heroPlay() {
   const forms = ['P ∨ ¬P', 'P ⊃ Q', 'P ∧ ¬P', '(P ⊃ Q) ∧ P ⊃ Q']
@@ -39,7 +40,8 @@ export function homePage(root) {
   const done = (lec) => { const s = store.get('seen:' + lec.slug, []); return Math.round((s.length / lec.chapters.length) * 100) }
   const latest = LECTURES[LECTURES.length - 1]
   const now = new Date()
-  const open = LECTURES.filter((l) => dueOf(l) > now)
+  const open = EXSETS.filter((l) => dueOf(l) > now).reverse()
+  const lastEx = EXSETS[0]
   const fmtDue = (l) => { const d = dueOf(l); return `${d.getMonth() + 1}/${d.getDate()}（木）23:59` }
   const daysTo = (l) => Math.ceil((dueOf(l) - now) / 864e5)
 
@@ -65,7 +67,7 @@ export function homePage(root) {
 
   const dueBar = h('section.wrap', { style: { marginTop: '10px' } }, h('div.due.reveal', h('div.clock', '⏰'),
     h('div', h('b', '演習レポートの締切'), h('span', '講義日翌週の木曜 23:59。完答じゃなくても、できるところまで出そう。')),
-    h('div.due-list', ...(open.length ? open : [latest]).map((l) => h('a.due-item', { href: `#/lec/${l.slug}/ex` }, h('small', `第${l.no}回 ex${l.no}`), h('b', fmtDue(l)), h('em', daysTo(l) > 0 ? `あと ${daysTo(l)} 日` : '締切済'))))))
+    h('div.due-list', ...(open.length ? open : [lastEx]).map((l) => h('a.due-item', { href: `#/ex/${l.id}` }, h('small', `第${l.no}回 ex${l.no}`), h('b', fmtDue(l)), h('em', daysTo(l) > 0 ? `あと ${daysTo(l)} 日` : '締切済'))))))
 
   const mq = h('div', { style: { overflow: 'hidden', padding: '20px 0' } },
     marquee(['<span class="fx">P ∨ ¬P</span> is always <span class="hl-t">⊤</span>', 'touch the truth', '<span class="fx">⊢ A ⇔ ⊨ A</span>', 'unfold the formula', '<span class="fx">P ∧ ¬P</span> is always <span class="hl-b">⊥</span>', 'collide the clauses'], { speed: 38 }),
@@ -126,6 +128,7 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
   const tools = h('section.section.wrap', { style: { paddingTop: 0 } },
     h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Toolbox'), h('h2', { 'data-kinetic': 'rise' }, 'Your logic kit.', h('span.jp.no-split', 'いつでも使える道具箱'))), h('p', 'レポートの検算や、試験前の確認に。')),
     h('div.tools',
+      h('a.tool.reveal', { href: '#/ex', style: { '--bg': '#ffe1ec' } }, h('div.ic', '✎'), h('h3', '演習解説'), h('p', 'ex1〜ex5 を「考え方の対話 → 解答例 → 採点ポイント → よくあるミス」で。最新の ex5 も。')),
       h('a.tool.reveal', { href: '#/tools', style: { '--bg': '#ece5ff' } }, h('div.ic', '⊨'), h('h3', '論理式ラボ'), h('p', '式を入れると構文木・真理値表・恒真判定・CNF・Wang の証明図まで一気に出る。')),
       h('a.tool.reveal', { href: '#/sheet', style: { '--bg': '#fff3c2' } }, h('div.ic', '≡'), h('h3', 'チートシート'), h('p', '同値の公式・CNF の手順・LK の 8 規則を 1 枚に。試験前の見直し用。')),
       h('a.tool.reveal', { href: '#/glossary', style: { '--bg': '#d3f6e6' } }, h('div.ic', 'Aa'), h('h3', '用語集'), h('p', '「充足可能」「初期シーケント」…出てきた言葉を検索。英語つき。'))))

@@ -26,8 +26,9 @@ export function dueOf(lec) {
   const [m, d] = lec.date.split('/').map(Number)
   const y = m < 4 ? COURSE.year + 1 : COURSE.year
   const day = new Date(y, m - 1, d)
-  const add = ((4 - day.getDay() + 7) % 7) + 7 // next week's Thursday
-  const due = new Date(y, m - 1, d + add, 23, 59, 0)
+  // 「翌週の木曜」= 講義週の次の週（月〜日）の木曜。金曜講義なら 6 日後。
+  const toMon = (8 - day.getDay()) % 7 || 7 // days to next Monday
+  const due = new Date(y, m - 1, d + toMon + 3, 23, 59, 0)
   return due
 }
 export const PARTS = [
