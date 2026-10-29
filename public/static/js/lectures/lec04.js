@@ -3,6 +3,7 @@ import { proofBuilder } from '../widgets/proof.js'
 import { formulaInput } from '../widgets/formula-input.js'
 import { parseSequent, showSeq, sequentFormula, show, classify, wang, treeOk, findCounter, fmtI } from '../logic/core.js'
 import { toto } from '../lib/chars.js'
+import { staticTree } from '../widgets/proof-static.js'
 
 // rule cards (lecture 4.3.1)
 const RULES = [
@@ -182,14 +183,3 @@ S: 行き止まりの $Q → P$ は「Q = ⊤, P = ⊥」で左が ⊤・右が 
   ],
 }
 
-// static (non-interactive) proof tree
-function staticTree(t) {
-  const node = (n) => {
-    const w = h('div.pf-node')
-    if (n.kids && n.kids.length) w.append(h('div.pf-prem', ...n.kids.map(node)), h('div.pf-bar', h('span.rl', n.rule)))
-    else if (n.status === 'axiom') w.append(h('div.pf-mark.ok', '✓ 初期'))
-    w.append(h('div.pf-seq.fx', { class: n.status === 'axiom' ? 'axiom' : n.status === 'fail' ? 'fail' : '', html: fxs(showSeq(n.seq)) }))
-    return w
-  }
-  return h('div.pf', node(t))
-}
