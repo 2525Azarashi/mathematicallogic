@@ -4,12 +4,12 @@ import lec01 from './lec01.js'
 import lec02 from './lec02.js'
 import lec03 from './lec03.js'
 import lec04 from './lec04.js'
+import lec05 from './lec05.js'
+import lec06 from './lec06.js'
 
-export const LECTURES = [lec01, lec02, lec03, lec04]
+export const LECTURES = [lec01, lec02, lec03, lec04, lec05, lec06]
 
 export const UPCOMING = [
-  { no: 5, title: '命題論理 — 健全性と完全性', date: '10/23' },
-  { no: 6, title: '一階述語論理 — 言語，構文論，意味論', date: '10/30' },
   { no: 7, title: '一階述語論理 — エルブランの定理，単一化', date: '11/06' },
   { no: 8, title: '一階述語論理 — 導出(融合)原理', date: '11/13' },
   { no: 9, title: '一階述語論理 — シーケント計算，構文論', date: '11/20' },
