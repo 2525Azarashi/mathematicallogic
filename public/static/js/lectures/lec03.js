@@ -125,11 +125,15 @@ S[happy]: そのイメージ。だから CNF は「節の集合」{C₁, …, C�
             <div class="panel" style="background:#fff"><h5>① リテラル literal</h5><div class="big-ans fx">${fxs('P　¬Q')}</div><p style="margin:0;font-size:13px;font-weight:700;color:var(--ink-2)">原子論理式 or その否定</p></div>
             <div class="panel" style="background:#fff"><h5>② 節 clause</h5><div class="big-ans fx">${fxs('P ∨ ¬Q ∨ R')}</div><p style="margin:0;font-size:13px;font-weight:700;color:var(--ink-2)">リテラルの ∨。順序・重複は無視。0 個なら<b>空節 ⊥</b></p></div>
             <div class="panel" style="background:#fff"><h5>③ CNF 連言標準形</h5><div class="big-ans fx" style="font-size:20px">${fxs('(P ∨ ¬Q) ∧ (¬P ∨ R)')}</div><p style="margin:0;font-size:13px;font-weight:700;color:var(--ink-2)">節の ∧ ＝ 節の集合 ${fxHTML('{P ∨ ¬Q, ¬P ∨ R}')}</p></div></div>`),
+          defn('定義', 'リテラル・節', `命題論理において，原子論理式またはその否定を<b>リテラル</b>という．$L₁, …, Lₙ$ をリテラルとするとき，$L₁ ∨ … ∨ Lₙ$ を<b>節</b>という．節のリテラルの順序や重複は無視する（たとえば $Q ∨ P$ と $P ∨ Q$ としてもよく，$P ∨ P$ は P としてよい）．<p class="note">注意：$L₁$ は n = 1 のときの節．</p>`, { en: 'literal, clause' }),
+          defn('定義', '空節', `節 $L₁ ∨ … ∨ Lₙ$ は，n = 0 のとき<b>空節</b>といい，⊥ で表す．`, { en: 'empty clause' }),
+          defn('定義', '連言標準形（和積標準形, CNF）', `$C₁, …, Cₖ$ を節とするとき，$C₁ ∧ … ∧ Cₖ$ を<b>連言標準形（CNF）</b>という．CNF における節の順序や重複は無視するので，CNF は節の有限集合 {C₁, …, Cₖ} で表すことができる．<p class="note">注意：$C₁$ は k = 1 のときの CNF．</p>`, { en: 'conjunctive normal form' }),
           talk(`R: 空節がなんで ⊥ なんですか？
 S: 節は「どれか 1 つのリテラルが ⊤ なら ⊤」。リテラルが 1 つもなければ、⊤ にしようがない。だから**必ず ⊥**。
 R: 誰も手を挙げられない多数決…！
 S[happy]: うまい。そして**任意の論理式は同値な CNF に変換できる**。手順は 4 つだけ。`),
           defn('手順', 'CNF への変換', `<ol><li><b>⊃ を除去</b>（ルール 6：$α ⊃ β = ¬α ∨ β$）</li><li><b>¬ を内側へ</b>（ルール 4,5：二重否定・ド・モルガン）</li><li><b>分配則</b>（ルール 3：$α ∨ (β ∧ γ) = (α ∨ β) ∧ (α ∨ γ)$）</li><li><b>その他の規則</b>（⊤, ⊥ や重複の整理）</li></ol>`),
+          defn('定理', 'CNF への変換', `任意の論理式は，それと論理的同値な CNF に変換することができる．`, { thm: true }),
           cnfLab(),
           callout('warn', 'CNF では「∨ の中に ∧」があってはいけません。最後に分配則で <b>∧ を外へ</b>追い出すのがゴール。逆向き（∨ を外へ）にすると DNF（選言標準形）になってしまいます。'),
           point('CNF 変換は <b>⊃ 除去 → ¬ を内側 → 分配 → 整理</b> の順。答案には各行で使った規則名を書く。'),
@@ -148,6 +152,9 @@ S[happy]: 完璧な説明。両方の節が ⊤ なら、導出節も必ず ⊤ 
           defn('定義', '導出（resolution）', `$C₁ = P ∨ C$, $C₂ = ¬P ∨ D$ のとき，$C₁, C₂$ から $C ∨ D$ を導く動作を<b>導出</b>という．$C ∨ D$ を<b>導出節</b>（resolvent），$C₁, C₂$ を<b>親節</b>（parent clause）という．`),
           talk(`R: で、空節 ⊥ が出てきたら？
 S: 「全部の節が同時に ⊤」なら導出節もずっと ⊤ のはず。なのに必ず ⊥ の空節が出た → 最初から**全部同時に ⊤ にするのは無理**だった、つまり**充足不能**。これが**反駁**。`),
+          defn('定義', '反駁（refutation）', `Δ を節の有限集合，C, D を節とするとき，以下の導出を繰り返すことを<b>反駁</b>という．<pre class="algo">while ⊥ ∉ Δ do
+    choose a pair P ∨ C ∈ Δ and ¬P ∨ D ∈ Δ
+    Δ := Δ ∪ {C ∨ D}</pre><p class="note">→ 「打ち消し合う 2 節を選んで導出節を足す」を、空節 ⊥ が出るまで続ける。</p>`, { en: 'refutation' }),
           resLab(),
           talk(`R: 演習 3.3、①と③で R ∨ P … じゃなくて P ∨ R、それと②で R、④とぶつけて ⊥！
 S[happy]: 番号を振って「節 i と節 j から ○ について導出」と書くと、採点者に伝わりやすいよ。下に出る導出の木も、答案にそのまま描ける形。`),

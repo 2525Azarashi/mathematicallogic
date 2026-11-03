@@ -28,7 +28,7 @@ export function reviewPage(root) {
     items.forEach((it) => list.append(row(it)))
   }
   function row(it) {
-    const kindLabel = { quiz: '類題', term: '用語', formula: '式' }[it.kind] || 'メモ'
+    const kindLabel = { quiz: '類題', term: '用語', formula: '式', ex: '演習' }[it.kind] || 'メモ'
     const go = () => { if (it.kind === 'term') openTerm(it.title); else if (it.href) location.hash = it.href }
     const card = h('div.sw-card', { 'data-cursor': 'スワイプ' },
       h('span.chip', { style: { background: it.kind === 'term' ? 'var(--imp-l)' : it.kind === 'quiz' ? 'var(--or-l)' : 'var(--and-l)' } }, kindLabel),
