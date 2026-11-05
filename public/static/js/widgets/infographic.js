@@ -161,6 +161,15 @@ export function setLogicInfo() {
 // ---------- lecture summary strip (stats) ----------
 export function lecStats(lec, due) {
   const days = Math.ceil((due - new Date()) / 864e5)
+  if (lec.preview) {
+    const [m, d] = lec.date.split('/').map(Number)
+    const until = Math.ceil((new Date(2026, m - 1, d) - new Date()) / 864e5)
+    return h('div.lec-stats.reveal',
+      h('div.ls', h('b', { 'data-count': lec.chapters.length }), h('span', 'チャプター')),
+      h('div.ls', h('b', { 'data-count': lec.exercises.length }), h('span', '練習問題')),
+      h('div.ls', h('b', { 'data-count': lec.quiz.length }), h('span', '類題')),
+      h('div.ls.wide', h('div.ls-due', until > 0 ? h('b', { 'data-count': until }) : h('b', '✓'), h('span', until > 0 ? `日後に講義（${lec.date}）。いまは講義ノートから作った予習版` : `講義日を過ぎました。プリントに合わせて更新予定`)), h('div.ls-track', h('i', { style: { '--w': '20%' } }))))
+  }
   return h('div.lec-stats.reveal',
     h('div.ls', h('b', { 'data-count': lec.chapters.length }), h('span', 'チャプター')),
     h('div.ls', h('b', { 'data-count': lec.exercises.length }), h('span', '公式演習')),

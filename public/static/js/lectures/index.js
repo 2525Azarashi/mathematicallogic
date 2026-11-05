@@ -6,11 +6,11 @@ import lec03 from './lec03.js'
 import lec04 from './lec04.js'
 import lec05 from './lec05.js'
 import lec06 from './lec06.js'
+import lec07 from './lec07.js'
 
-export const LECTURES = [lec01, lec02, lec03, lec04, lec05, lec06]
+export const LECTURES = [lec01, lec02, lec03, lec04, lec05, lec06, lec07]
 
 export const UPCOMING = [
-  { no: 7, title: '一階述語論理 — エルブランの定理，単一化', date: '11/06' },
   { no: 8, title: '一階述語論理 — 導出(融合)原理', date: '11/13' },
   { no: 9, title: '一階述語論理 — シーケント計算，構文論', date: '11/20' },
   { no: 10, title: '中間試験', date: '11/27', exam: true },

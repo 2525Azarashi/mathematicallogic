@@ -1,6 +1,7 @@
 import { h, talk, store, $$ } from '../lib/ui.js'
 import { avatar } from '../lib/chars.js'
 import { LECTURES, dueOf } from '../lectures/index.js'
+import { EXSETS } from '../data/exsets.js'
 import { quiz, exercise } from '../widgets/quiz.js'
 import { LEC_INFO, lecStats } from '../widgets/infographic.js'
 import { splitChars } from '../lib/motion.js'
@@ -23,7 +24,7 @@ export function lecturePage(root, slug, anchor) {
     h('div.lec-hero-grid',
       h('div.big-no', h('span.digit', String(lec.no))),
       h('div', titleEl,
-        h('div.meta', h('span.chip', `📅 ${lec.date}（金）`), h('span.chip', `📝 演習締切 ${due.getMonth() + 1}/${due.getDate()}（木）23:59`), h('span.chip', `💬 ${lec.chapters.length} チャプター`)), bigFx),
+        h('div.meta', h('span.chip', `📅 ${lec.date}（金）`), (lec.preview ? h('span.chip.preview', '🔭 予習版（講義前）') : h('span.chip', `📝 演習締切 ${due.getMonth() + 1}/${due.getDate()}（木）23:59`)), h('span.chip', `💬 ${lec.chapters.length} チャプター`)), bigFx),
       h('div.cast-mini', h('div.av', { html: avatar('S', 'happy') }), h('div.av', { html: avatar('R', 'normal') }))),
     lecStats(lec, due))
 
@@ -40,10 +41,10 @@ export function lecturePage(root, slug, anchor) {
     if (infos) { const firstTalk = sec.querySelector('.talk'); const els = infos.map((f) => f()); if (firstTalk) firstTalk.after(...els); else sec.append(...els) }
     main.append(sec)
   })
-  const ex = h('section.chap', { id: 'c-ex', dataset: { id: 'ex' } }, h('div.chap-head.reveal', h('span.n', String(lec.chapters.length + 1)), h('h2', { class: 'plain' }, `演習問題 ex${lec.no}`, h('small', 'Official exercises'))),
+  const ex = h('section.chap', { id: 'c-ex', dataset: { id: 'ex' } }, h('div.chap-head.reveal', h('span.n', String(lec.chapters.length + 1)), h('h2', { class: 'plain' }, EXSETS.some((x) => x.no === lec.no) ? `演習問題 ex${lec.no}` : '練習問題（自習用）', h('small', EXSETS.some((x) => x.no === lec.no) ? 'Official exercises' : 'Practice'))),
     talk(`R: 演習、いきなり答えを見たくなっちゃうんですよね…。
 S[happy]: まずは自分で。詰まったら「ヒント」、それでもダメなら「解答例」。**できたところまで出す**のが一番の勉強だよ。`),
-    h('a.xp-link.reveal', { href: `#/ex/ex${lec.no}` }, h('span.ic', '✎'), h('span', h('b', `ex${lec.no} の解説ページへ`), h('small', '考え方の対話・採点ポイント・よくあるミスつき')), h('span.arr', '→')),
+    !EXSETS.some((x) => x.no === lec.no) ? null : h('a.xp-link.reveal', { href: `#/ex/ex${lec.no}` }, h('span.ic', '✎'), h('span', h('b', `ex${lec.no} の解説ページへ`), h('small', '考え方の対話・採点ポイント・よくあるミスつき')), h('span.arr', '→')),
     ...lec.exercises.map(exercise))
   const qz = h('section.chap', { id: 'c-quiz', dataset: { id: 'quiz' } }, h('div.chap-head.reveal', h('span.n', String(lec.chapters.length + 2)), h('h2', { class: 'plain' }, '類題でチェック', h('small', 'Quick quiz'))),
     talk(`S: 最後に確認テスト。間違えても何度でも押せるし、正解すると理由を話すね。`), quiz(lec.quiz, lec.slug))

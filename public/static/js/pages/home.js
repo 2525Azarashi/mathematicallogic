@@ -38,7 +38,7 @@ function heroPlay() {
 
 export function homePage(root) {
   const done = (lec) => { const s = store.get('seen:' + lec.slug, []); return Math.round((s.length / lec.chapters.length) * 100) }
-  const latest = LECTURES[LECTURES.length - 1]
+  const latest = [...LECTURES].reverse().find((l) => !l.preview) || LECTURES[LECTURES.length - 1]
   const now = new Date()
   const open = EXSETS.filter((l) => dueOf(l) > now).reverse()
   const lastEx = EXSETS[0]
@@ -109,7 +109,7 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
   LECTURES.forEach((l) => {
     const p = done(l)
     list.append(h('a.lec-card.reveal', { href: `#/lec/${l.slug}`, style: { '--c': l.color } },
-      h('div.no', h('small', 'LEC'), h('b', String(l.no).padStart(2, '0'))),
+      h('div.no', h('small', l.preview ? '予習' : 'LEC'), h('b', String(l.no).padStart(2, '0'))),
       h('div', h('div.sub', `${l.date}（金）`), h('h3', l.title), h('div.sub', l.sub), h('div.tiny-fx', { html: fxs(l.tinyFx) }), h('div.meta', ...l.tags.slice(0, 4).map((t) => h('span.chip', t)))),
       h('span.go', '→'), h('span.prog', { style: { width: p + '%' } })))
   })
@@ -122,7 +122,7 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
     h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Big picture'), h('h2', { 'data-kinetic': 'rise' }, 'Where are we?', h('span.jp.no-split', 'いま全体のどこ？'))), h('p', '命題論理で作った道具（意味論・導出・シーケント）を、そのまま 1 階述語論理へ持ち上げていく構成です。')),
     h('div.big-map', ...PARTS.map((p) => h('div.part.reveal', h('div.tag', p.tag), h('h4', p.title), h('ul', ...p.items.map(([n, t]) => {
       const live = LECTURES.find((l) => l.no === n)
-      return h('li', { class: live ? (live === LECTURES[LECTURES.length - 1] ? 'now' : 'done') : '' }, h('i'), live ? h('a', { href: `#/lec/${live.slug}`, style: { textDecoration: 'none' } }, `第${n}回 ${t}`) : `第${n}回 ${t}`)
+      return h('li', { class: live ? (live === latest ? 'now' : live.preview ? 'pre' : 'done') : '' }, h('i'), live ? h('a', { href: `#/lec/${live.slug}`, style: { textDecoration: 'none' } }, `第${n}回 ${t}`) : `第${n}回 ${t}`)
     }))))))
 
   const tools = h('section.section.wrap', { style: { paddingTop: 0 } },

@@ -42,6 +42,7 @@ export function fxs(src) {
     .replace(/∧/g, '<span class="o o-and">∧</span>')
     .replace(/∨/g, '<span class="o o-or">∨</span>')
     .replace(/⊃/g, '<span class="o o-imp">⊃</span>')
+    .replace(/[∀∃]/g, '<span class="o o-q">$&</span>')
     .replace(/⊤/g, '<span class="c-top">⊤</span>')
     .replace(/⊥/g, '<span class="c-bot">⊥</span>')
     .replace(/→/g, '<span class="arrow">→</span>')
