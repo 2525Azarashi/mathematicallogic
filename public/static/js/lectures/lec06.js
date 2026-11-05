@@ -2,6 +2,7 @@ import { h, html, talk, point, defn, lab, callout, rich, tv, seg, confettiAt, to
 import { folInput } from '../widgets/fol-input.js'
 import { parseFol, folHTML, showFol, freeVars, boundVars, isClosed, occurrences, folSubformulas, subst, parseTerm, showTerm, signature, evalFol, evalTerm, searchModel, tuples, tryFol } from '../logic/fol.js'
 import { toto } from '../lib/chars.js'
+import { EX6 } from '../data/ex6.js'
 
 // 領域 D の要素（かわいく動物で）
 const ANIMALS = ['🐰', '🐱', '🐻', '🐸']
@@ -19,7 +20,7 @@ function folAnatomy() {
     <div class="fa-fl t2" style="--d:.25s"><b>原子論理式</b><span class="fx fol">${folHTML(parseFol('R(x, f(y))'))}</span><small>述語記号 ＋ 項の並び</small></div>
     <div class="fa-fl t1" style="--d:.4s"><b>項</b><span class="fx fol"><span class="cn">a</span>　<span class="vr">x</span>　<span class="fn">f</span>(<span class="vr">y</span>)</span><small>「もの」＝ 領域 D の要素を指す</small></div>
   </div>
-  <div class="fa-legend"><span class="lg pd">述語記号 P, Q, R</span><span class="lg fn">関数記号 f, g, h</span><span class="lg cn">定数 a, b, c</span><span class="lg vr">変数 x, y, z</span><span class="lg q">量化記号 ∀ ∃</span></div></div>`)
+  <div class="fa-legend"><span class="lg pd">述語記号 P, Q, R</span><span class="lg fn">関数記号 f, g, h</span><span class="lg cn">定数 a, b, c</span><span class="lg vr">変数 x, y, z</span><span class="lg qt">量化記号 ∀ ∃</span></div></div>`)
 }
 // ---------- Infographic: interpretation = 4 pieces ----------
 function interpInfo() {
@@ -262,7 +263,7 @@ R: 大文字・小文字で役割が違うんですね。`),
             <div class="sym vr"><b>x</b><span>変数</span><small>「もの」が入る穴<br>∀x, ∃x で縛れる</small></div>
             <div class="sym fn"><b>f( )</b><span>関数記号</span><small>もの → もの<br>例：父(x), x + 1</small></div>
             <div class="sym pd"><b>P( )</b><span>述語記号</span><small>もの → ⊤/⊥<br>例：人間(x), x &lt; y</small></div>
-            <div class="sym q"><b>∀ ∃</b><span>量化記号</span><small>すべての / ある</small></div></div>`),
+            <div class="sym qt"><b>∀ ∃</b><span>量化記号</span><small>すべての / ある</small></div></div>`),
           talk(`R: f(x) と P(x)、見た目はそっくりなのに…。
 S: **出てくるものが違う**。f(x) は「もの」（例：x の父）、P(x) は「⊤ か ⊥」（例：x は人間である）。だから f(x) は P の引数に入れられるけど、P(x) を f の引数には入れられない。
 R: 「父(ソクラテス) は人間」はOK、「父(ソクラテスは人間)」は意味不明、か。`),
@@ -385,6 +386,7 @@ S: そういうこと。そして (3) が**第 7〜8 回の導出原理**の出�
     },
   ],
   exercises: [
+    ...EX6.map((p) => ({ no: p.no, q: p.q, hint: p.hint, answer: p.answer(), extra: (p.extra || []).map(([l, b]) => [l, b()]) })),
     {
       no: '6.A', q: '（自習用・公式演習ではありません）論理式 ∀x(P(x) ⊃ Q(x, y)) ∧ R(x) について，(1) 各変数の出現が自由か束縛かを答え，(2) 自由変数と束縛変数をすべて挙げ，(3) 閉じた論理式かどうかを答えよ．',
       hint: '∀x のスコープは括弧 (P(x) ⊃ Q(x, y)) の中だけ。最後の R(x) は ∧ の右側でスコープの外。',

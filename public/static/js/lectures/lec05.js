@@ -140,10 +140,10 @@ S: 「正しいのに証明できない」式が残る。使えるけど、力�
 R[wow]: 健全 ＝ ウソをつかない、完全 ＝ 取りこぼさない、か。`),
           defn('定理', 'LK の健全性・完全性', `<b>LK の健全性</b>：任意のシーケントは LK で証明可能ならばトートロジである．<br><b>LK の完全性</b>：任意のシーケントはトートロジであれば LK で証明可能である．`, { thm: true }),
           html(`<div class="sc-quad reveal">
-            <div class="q ok"><b>証明できる ＆ トートロジ</b><small>例：→ P ∨ ¬P</small></div>
-            <div class="q no1"><b>証明できる のに トートロジでない</b><small>健全性があれば<br>存在しない</small></div>
-            <div class="q no2"><b>トートロジ なのに 証明できない</b><small>完全性があれば<br>存在しない</small></div>
-            <div class="q ok2"><b>証明できない ＆ トートロジでない</b><small>例：P ∨ Q → P</small></div></div>`),
+            <div class="qd ok"><b>証明できる ＆ トートロジ</b><small>例：→ P ∨ ¬P</small></div>
+            <div class="qd no1"><b>証明できる のに トートロジでない</b><small>健全性があれば<br>存在しない</small></div>
+            <div class="qd no2"><b>トートロジ なのに 証明できない</b><small>完全性があれば<br>存在しない</small></div>
+            <div class="qd ok2"><b>証明できない ＆ トートロジでない</b><small>例：P ∨ Q → P</small></div></div>`),
           point('<b>健全性</b> ⊢ ⇒ ⊨（ウソは証明できない）。<b>完全性</b> ⊨ ⇒ ⊢（正しいものは必ず証明できる）。両方そろうと <b>⊢ ⇔ ⊨</b>。'),
         )
       },

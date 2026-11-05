@@ -47,6 +47,9 @@ function tokenize(s) {
     if (c === '∃') { push('q', 'ex', 1); continue }
     if (c === '⊤') { push('const', 'top', 1); continue }
     if (c === '⊥') { push('const', 'bot', 1); continue }
+    // 数字だけの語は定数（11 など）
+    const num = /^[0-9]+/.exec(s.slice(i))
+    if (num) { push('low', num[0], num[0].length); continue }
     // 小文字の語は小文字・数字のみ（∀xP を ∀ x P と読むため）
     const m = /^(?:[a-z][a-z0-9_'₀-₉]*|[A-Z][A-Za-z0-9_'₀-₉]*)/.exec(s.slice(i))
     if (m) {
@@ -199,6 +202,13 @@ export function folHTML(f, { mark = false } = {}) {
       default: return s
     }
   }).join('')
+}
+
+// 項だけを HTML に（色分け）
+export function termHTML(t) {
+  if (t.t === 'var') return `<span class="vr">${escH(t.n)}</span>`
+  if (t.t === 'const') return `<span class="cn">${escH(t.n)}</span>`
+  return `<span class="fn">${escH(t.n)}</span>(${t.args.map(termHTML).join(', ')})`
 }
 
 // ---------- syntax queries ----------
