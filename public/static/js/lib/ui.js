@@ -43,6 +43,7 @@ export function fxs(src) {
     .replace(/∨/g, '<span class="o o-or">∨</span>')
     .replace(/⊃/g, '<span class="o o-imp">⊃</span>')
     .replace(/[∀∃]/g, '<span class="o o-q">$&</span>')
+    .replace(/[□◇]/g, '<span class="o o-mod">$&</span>')
     .replace(/⊤/g, '<span class="c-top">⊤</span>')
     .replace(/⊥/g, '<span class="c-bot">⊥</span>')
     .replace(/→/g, '<span class="arrow">→</span>')
@@ -60,7 +61,7 @@ export function rich(s) {
   s = parts.map((p) => {
     if (p.startsWith('$') && p.endsWith('$') && p.length > 1) return `<span class="fx">${fxs(p.slice(1, -1))}</span>`
     if (p.startsWith('<')) return p
-    return p.replace(/[¬∧∨⊃]/g, (c) => `<span class="o o-${{ '¬': 'not', '∧': 'and', '∨': 'or', '⊃': 'imp' }[c]}">${c}</span>`)
+    return p.replace(/[¬∧∨⊃□◇]/g, (c) => `<span class="o o-${{ '¬': 'not', '∧': 'and', '∨': 'or', '⊃': 'imp', '□': 'mod', '◇': 'mod' }[c]}">${c}</span>`)
   }).join('')
   return s
     .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')

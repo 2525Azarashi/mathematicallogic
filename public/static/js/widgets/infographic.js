@@ -41,7 +41,7 @@ export function timeline(lectures, upcoming) {
   const all = [...lectures.map((l) => ({ no: l.no, date: l.date, title: l.title.replace(/^.*— /, ''), live: true, color: l.color, slug: l.slug })), ...upcoming.map((u) => ({ ...u, title: u.title.replace(/^.*— /, '') }))].sort((a, b) => a.no - b.no)
   const n = all.length
   const W = 1100, H = 210, pad = 64, step = (W - pad * 2) / (n - 1)
-  const lastLive = Math.max(...lectures.map((l) => l.no))
+  const lastLive = 7 // 現在の進行位置（第7回 11/06 時点；12・13回は先行公開）
   const progX = pad + (lastLive - 1) * step
   const dots = all.map((it, i) => {
     const x = pad + i * step
@@ -161,6 +161,7 @@ export function setLogicInfo() {
 // ---------- lecture summary strip (stats) ----------
 export function lecStats(lec, due) {
   const days = Math.ceil((due - new Date()) / 864e5)
+  const hasOfficialEx = lec.exercises.length > 0 && !/^\d+\.[A-Z]/.test(lec.exercises[0].no)
   if (lec.preview) {
     const [m, d] = lec.date.split('/').map(Number)
     const until = Math.ceil((new Date(2026, m - 1, d) - new Date()) / 864e5)
@@ -169,6 +170,15 @@ export function lecStats(lec, due) {
       h('div.ls', h('b', { 'data-count': lec.exercises.length }), h('span', '練習問題')),
       h('div.ls', h('b', { 'data-count': lec.quiz.length }), h('span', '類題')),
       h('div.ls.wide', h('div.ls-due', until > 0 ? h('b', { 'data-count': until }) : h('b', '✓'), h('span', until > 0 ? `日後に講義（${lec.date}）。いまは講義ノートから作った予習版` : `講義日を過ぎました。プリントに合わせて更新予定`)), h('div.ls-track', h('i', { style: { '--w': '20%' } }))))
+  }
+  if (!hasOfficialEx) {
+    const [m, d] = lec.date.split('/').map(Number)
+    const until = Math.ceil((new Date(2026, m - 1, d) - new Date()) / 864e5)
+    return h('div.lec-stats.reveal',
+      h('div.ls', h('b', { 'data-count': lec.chapters.length }), h('span', 'チャプター')),
+      h('div.ls', h('b', { 'data-count': lec.exercises.length }), h('span', '練習問題')),
+      h('div.ls', h('b', { 'data-count': lec.quiz.length }), h('span', '類題')),
+      h('div.ls.wide', h('div.ls-due', until > 0 ? h('b', { 'data-count': until }) : h('b', '✓'), h('span', until > 0 ? `日後に講義（${lec.date}） — 第3部講義ノート収録済` : `講義日 ${lec.date} — 演習プリント配布後に追加予定`)), h('div.ls-track', h('i', { style: { '--w': '100%' } }))))
   }
   return h('div.lec-stats.reveal',
     h('div.ls', h('b', { 'data-count': lec.chapters.length }), h('span', 'チャプター')),

@@ -3,7 +3,7 @@
 //  講義ページ（Mathematical Logic.pdf）の内容：目的・到達目標・レポート・資料・日程・成績・準備学習・参考文献
 // ============================================================
 import { h, talk, rich, callout } from '../lib/ui.js'
-import { LECTURES, UPCOMING, dueOf } from '../lectures/index.js'
+import { LECTURES, UPCOMING, SYLLABUS_SESSIONS, dueOf } from '../lectures/index.js'
 import { timeline, gradingInfo } from '../widgets/infographic.js'
 import { splitChars } from '../lib/motion.js'
 
@@ -12,13 +12,13 @@ const GOALS = [
   { t: '構文論と意味論', d: '記号の「形」と、解釈による「真偽」を区別し、その関係を理解する', at: [['lec02', 'syntax', '第2回 構文論'], ['lec02', 'sem', '第2回 意味論'], ['lec04', 'syn', '第4回 構文論 vs 意味論']] },
   { t: '自然演繹・公理系による証明方法', d: '公理と推論規則から論理式を導く「演繹体系」で証明する', at: [['lec04', 'syn', '第4回 演繹体系'], ['lec04', 'proof', '第4回 証明図']] },
   { t: '導出（融合）原理の基本操作', d: 'CNF に直し、節どうしを打ち消して空節 ⊥ を導く', at: [['lec03', 'clause', '第3回 CNF'], ['lec03', 'res', '第3回 導出・反駁']] },
-  { t: '完全性・健全性の意味', d: '「証明できる」と「本当に正しい」が一致することの意味を理解する', at: [['lec03', 'res', '第3回 導出の健全性・完全性'], ['lec04', 'proof', '第4回 LK の健全性・完全性']], soon: '第5回で本格的に' },
+  { t: '完全性・健全性の意味', d: '「証明できる」と「本当に正しい」が一致することの意味を理解する', at: [['lec03', 'res', '第3回 導出の健全性・完全性'], ['lec04', 'proof', '第4回 LK の健全性・完全性'], ['lec05', 'sound', '第5回 健全性・完全性'], ['lec12', 'seq', '第12回 様相論理の完全性']] },
 ]
 const MATERIALS = [
   ['予備知識', '集合と関係', 'lec01'],
   ['第1部', '命題論理', 'lec02'],
-  ['第2部', '1階述語論理', null],
-  ['第3部', '非古典論理', null],
+  ['第2部', '1階述語論理', 'lec06'],
+  ['第3部', '非古典論理', 'lec12'],
 ]
 // [title, author, publisher, year, beginner(blue)]
 const BOOKS = [
@@ -48,15 +48,17 @@ export function syllabusPage(root) {
       h('div', title, h('div.meta', h('span.chip', '全 14 回'), h('span.chip', '中間 40% ＋ 期末 60%'), h('span.chip', { style: { background: 'var(--or-l)' } }, '講義ページ（Last Updated: 2026/10/9）より')))))
 
   const now = new Date()
-  const all = [...LECTURES.map((l) => ({ no: l.no, date: l.date, title: l.title, slug: l.slug, color: l.color })), ...UPCOMING]
-  const sched = h('table.tbl.sy-sched', h('thead', h('tr', h('th', '回'), h('th', '日付'), h('th', '内容'), h('th', 'このサイト'))),
-    h('tbody', ...all.map((r) => {
-      const live = !!r.slug
-      const past = !r.exam && dueOf(r) < now
-      return h('tr', { class: r.exam ? 'exam' : live ? 'live' : '' },
-        h('td.no', String(r.no)), h('td.dt', r.date),
-        h('td', r.exam ? h('b', '📝 ' + r.title) : r.title),
-        h('td', live ? h('a.chip', { href: `#/lec/${r.slug}`, style: { background: r.color } }, '講義ページ →') : r.exam ? h('span.chip.muted', '試験') : h('span.chip.muted', past ? 'プリント待ち' : '準備中')))
+  const sched = h('table.tbl.sy-sched', h('thead', h('tr', h('th', '回'), h('th', '日付'), h('th', '内容・配布資料'), h('th', 'このサイト'))),
+    h('tbody', ...SYLLABUS_SESSIONS.map((s) => {
+      const liveLec = LECTURES.find((l) => l.no === s.no)
+      const past = !s.exam && dueOf(s) < now
+      return h('tr', { class: s.exam ? 'exam' : liveLec ? 'live' : '' },
+        h('td.no', String(s.no)),
+        h('td.dt', s.date, s.mode ? h('div', h('span.chip.note', { style: { fontSize: '10.5px', padding: '0 6px' } }, s.mode)) : null),
+        h('td',
+          s.exam ? h('b', '📝 ' + s.title) : h('b', s.title),
+          s.mats && s.mats.length ? h('div.sy-at', { style: { marginTop: '4px' } }, ...s.mats.map((m) => h('span.chip', { style: { fontSize: '11px', padding: '0 7px', background: 'var(--paper)' } }, m))) : null),
+        h('td', liveLec ? h('a.chip', { href: `#/lec/${liveLec.slug}`, style: { background: liveLec.color } }, '講義ページ →') : s.exam ? h('span.chip.muted', '試験') : h('span.chip.muted', past ? 'プリント待ち' : '準備中')))
     })))
 
   const goals = h('div.sy-goals', ...GOALS.map((g, i) => h('div.sy-goal.reveal',

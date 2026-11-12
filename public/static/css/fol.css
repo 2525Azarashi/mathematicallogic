@@ -405,8 +405,87 @@
 .hb-sub > small { display: block; font-size: 12px; font-weight: 800; color: var(--ink-2); margin-bottom: 4px; }
 .ex72-gi { margin-top: 10px; }
 
+/* =========================================================
+   第12回（様相論理・時相論理）／第13回（非古典論理・まとめ）
+   ========================================================= */
+.o-mod { color: #008b7d; font-weight: 800; }
+
+/* modal 3-cards infographic */
+.md-tri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.md-c { border: 2px solid var(--ink); border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; background: var(--paper); opacity: 0; transform: translateY(12px); }
+.reveal.in .md-c { animation: faIn .55s var(--ease) forwards; animation-delay: var(--d); }
+.md-c b { font-family: var(--f-fx); font-size: 24px; }
+.md-c span { font-weight: 900; font-size: 13.5px; }
+.md-c small { font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.md-c.m-nec { background: #d4f5ef; }
+.md-c.m-pos { background: var(--or-l); }
+.md-readings { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; }
+
+/* Kripke lab */
+.kr-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; margin-top: 12px; align-items: start; }
+.kr-canvas { background: var(--paper); border: 2px solid var(--ink); border-radius: 18px; padding: 8px; margin-bottom: 10px; }
+.kr-svg { width: 100%; height: auto; display: block; max-height: 250px; }
+.kr-ctrl { display: flex; flex-direction: column; gap: 10px; }
+.kr-vtbl, .kr-rtbl { width: 100%; border-collapse: separate; border-spacing: 4px; text-align: center; }
+.kr-vtbl th, .kr-rtbl th { font-size: 13px; font-weight: 800; }
+.kr-edge-btn { width: 42px; height: 32px; border: 2px solid var(--ink); border-radius: 10px; background: var(--paper); font-weight: 900; font-size: 16px; }
+.kr-edge-btn.on { background: #d4f5ef; color: #006d62; box-shadow: 0 2px 0 var(--ink); }
+.kr-props { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip.ok-c { background: var(--top-l); }
+.chip.ng-c { background: var(--bot-l); }
+.kr-valid-bar { margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--ink-2); background: #fff; border: 1.5px dashed var(--rule); border-radius: 12px; padding: 6px 12px; }
+.pf-bar .rl.mod-rl { background: #d4f5ef; color: #005f56; }
+.msq-out { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+/* Temporal timeline lab */
+.tm-line { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 8px; }
+.tm-step { border: 2px solid var(--ink); border-radius: 16px; padding: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform .2s var(--ease); }
+.tm-step.reach { background: #e8fbf7; }
+.tm-step.past { opacity: .62; background: var(--paper-2); }
+.tm-step.now { box-shadow: 0 4px 0 var(--ink); border-width: 2.5px; transform: translateY(-2px); background: var(--or-l); }
+.tm-head { width: 100%; border: 1.5px solid var(--ink); border-radius: 10px; background: #fff; padding: 3px 6px; display: flex; flex-direction: column; align-items: center; }
+.tm-head small { font-size: 10px; font-weight: 900; color: var(--ink-2); }
+.tm-head b { font-family: var(--f-fx); font-size: 16px; }
+.tm-pqs { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.tm-pqs .mc-cell { width: auto; padding: 0 7px; font-size: 12.5px; height: 28px; }
+.tm-tbl { margin-top: 12px; }
+.tm-tbl tr.t td { background: rgba(211, 246, 230, .35); }
+.tm-tbl tr.f td { background: rgba(255, 225, 232, .25); }
+
+/* Non-classical overview & labs (lec13) */
+.ncl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ncl-card { border: 2px solid var(--ink); border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; background: #fff; opacity: 0; transform: translateY(12px); }
+.reveal.in .ncl-card { animation: faIn .55s var(--ease) forwards; animation-delay: var(--d); }
+.ncl-card.c1 { background: #d4f5ef; }
+.ncl-card.c2 { background: var(--or-l); }
+.ncl-card.c3 { background: var(--imp-l); }
+.ncl-card.c4 { background: #fde2db; }
+.ncl-k { align-self: flex-start; font-size: 11px; font-weight: 900; background: #fff; border: 1.5px solid var(--ink); border-radius: 999px; padding: 0 8px; }
+.ncl-card b { font-size: 15px; }
+.ncl-card small { font-size: 12.5px; font-weight: 700; color: var(--ink-2); line-height: 1.55; }
+
+.mv-ctrl { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+.mv-picks { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.mv-pick { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.mv-pick button { border: 2px solid var(--ink); border-radius: 10px; background: #fff; padding: 3px 10px; font-weight: 800; font-size: 13px; }
+.mv-pick button.on { background: var(--or); box-shadow: 0 2px 0 var(--ink); }
+.mv-sl { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 2px solid var(--ink); border-radius: 12px; padding: 4px 12px; }
+.mv-rule-note { margin: 4px 0 10px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.tv.u { background: var(--or-l); color: #8a5a00; }
+.mv-bar { display: inline-flex; align-items: center; gap: 8px; min-width: 110px; }
+.mv-bar i { display: inline-block; height: 10px; border: 1.5px solid var(--ink); border-radius: 999px; min-width: 6px; }
+.mv-tbl tr.t td { background: rgba(211, 246, 230, .35); }
+.mv-tbl tr.u td { background: rgba(255, 243, 194, .45); }
+.mv-tbl tr.f td { background: rgba(255, 225, 232, .3); }
+
+.ss-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.ss-usage { margin: 4px 0 10px; font-size: 14px; font-weight: 700; background: var(--paper); border: 1.5px solid var(--ink); border-radius: 12px; padding: 6px 12px; }
+.ss-table tr.t td { background: rgba(211, 246, 230, .3); }
+.ss-table tr.f td { background: rgba(255, 225, 232, .25); }
+
 @media (max-width: 760px) {
   .rd-line { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
   .rd-line::before { display: none; }
-  .sk-row, .un-in, .qo-cards { grid-template-columns: 1fr; }
+  .sk-row, .un-in, .qo-cards, .md-tri, .kr-grid, .ncl-grid { grid-template-columns: 1fr; }
+  .tm-line { grid-template-columns: repeat(2, 1fr); }
 }
