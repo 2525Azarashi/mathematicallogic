@@ -79,7 +79,7 @@ function route() {
     $$('.nav-links a').forEach((x) => x.classList.toggle('on', x.dataset.r === (page || 'home')))
     $('#nav-links').classList.remove('open')
     const titles = { tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', syllabus: 'シラバス' }
-    if (page === 'ex') { exercisesPage(app, a); document.title = '演習解説 ex1〜ex5 — Tiny Tautology' }
+    if (page === 'ex') { exercisesPage(app, a); document.title = '演習解説 ex1〜ex7 — Tiny Tautology' }
     else if (page === 'lec') { lecturePage(app, a, b); const l = LECTURES.find((x) => x.slug === a); document.title = l ? `第${l.no}回 ${l.title} — Tiny Tautology` : 'Tiny Tautology' }
     else if (titles[page]) { ({ tools: toolsPage, sheet: sheetPage, glossary: glossaryPage, review: reviewPage, syllabus: syllabusPage })[page](app); document.title = `${titles[page]} — Tiny Tautology` }
     else { homePage(app); document.title = 'Tiny Tautology — 数理論理学 2026 の遊び場' }

@@ -4,6 +4,7 @@ import { parseFol, folHTML, termHTML, showFol } from '../logic/fol.js'
 import { clausify, unify, showSub, herbrandUniverse, herbrandBase, groundInstances, minimalUnsat, parseClause } from '../logic/fol-proof.js'
 import { clauseHTML, subHTML } from '../widgets/fol-widgets.js'
 import { toto } from '../lib/chars.js'
+import { EX7 } from '../data/ex7.js'
 
 const F = (s) => `<span class="fx fol">${folHTML(parseFol(s))}</span>`
 
@@ -126,7 +127,7 @@ function unifyLab() {
 }
 
 export default {
-  no: 7, slug: 'lec07', date: '11/06', color: '#3fb6a8', colorL: '#d8f4f0', preview: true,
+  no: 7, slug: 'lec07', date: '11/06', color: '#3fb6a8', colorL: '#d8f4f0',
   title: '一階述語論理 — エルブランの定理，単一化', sub: '無限の世界を「項でできた世界」に縮め、変数を合わせる技術を手に入れる',
   tags: ['論理的同値', '冠頭形', 'Skolem 化', 'エルブラン領域', '基礎例', '代入・合成', '単一化・mgu'],
   tinyFx: '∀x∃y R(x, y) ⇝ ∀x R(x, f(x))',
@@ -141,7 +142,6 @@ S: 命題論理のときと同じ作戦。**否定して、充足不能を示す
 R: 「A が恒真 ⇔ ¬(∀x₁…∀xₙ A) が充足不能」！
 S[happy]: そう。そして充足不能を示す道具が**導出（第8回）**。でもその前に、式を導出が扱える形 ── **∀ だけの節集合** ── に直す必要がある。今日はその変形と、「本当にそれでいいの？」を保証する**エルブランの定理**、それと導出の心臓部の**単一化**。`),
           roadInfo(),
-          callout('tip', 'このページは<b>予習版</b>です。講義ノート（FirstOrderLogic.pdf）1.5〜2.1 をもとに作っています。講義のあとに、プリントや演習に合わせて更新します。'),
         )
       },
     },
@@ -241,6 +241,7 @@ S[happy]: 完璧。単一化の失敗は、この 2 種類（**記号の衝突**
     },
   ],
   exercises: [
+    ...EX7.map((p) => ({ no: p.no, q: p.q, hint: p.hint, answer: p.answer(), extra: (p.extra || []).map(([l, b]) => [l, b()]) })),
     {
       no: '7.A', q: '（自習用・公式演習ではありません）∀x∃y∀z∃w R(x, y, z, w) を Skolem 化せよ．',
       hint: '∃y の前には ∀x だけ、∃w の前には ∀x と ∀z がある。',
