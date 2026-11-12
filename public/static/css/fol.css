@@ -384,8 +384,29 @@
 .pf-seq.fol .fm.qf { box-shadow: inset 0 -3px 0 var(--q) !important; }
 .pf-bar .rl.bad { background: var(--bot); color: #fff; }
 
+/* ex7 labs & question interpretation table */
+.ex-itbl { display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 6px 14px; margin: 8px 0; }
+.ex-itbl table { border-collapse: collapse; font-family: var(--f-fx); font-size: 15px; text-align: center; }
+.ex-itbl th, .ex-itbl td { padding: 2px 10px; }
+.ex-itbl th { border-bottom: 2px solid var(--ink); font-weight: 700; }
+.qo-top { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 12px; }
+.qo-itbl { border-collapse: separate; border-spacing: 6px 2px; text-align: center; background: var(--paper); border: 2px solid var(--ink); border-radius: 14px; padding: 6px 10px; }
+.qo-itbl th { font-size: 15px; padding: 0 4px; }
+.qo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.qo-card { border: 2px solid var(--ink); border-radius: 16px; padding: 10px 12px; background: #fff; display: flex; flex-direction: column; gap: 6px; }
+.qo-card.t { background: rgba(211, 246, 230, .35); }
+.qo-card.f { background: rgba(255, 225, 232, .35); }
+.qo-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 16px; }
+.qo-hd .tv { margin-left: auto; }
+.qo-steps { display: flex; flex-direction: column; gap: 4px; }
+.qo-steps .mt-r { grid-template-columns: auto 1fr; align-items: center; }
+.qo-why { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.hb-t.new { background: var(--or-l); box-shadow: 0 2px 0 var(--ink); }
+.hb-sub > small { display: block; font-size: 12px; font-weight: 800; color: var(--ink-2); margin-bottom: 4px; }
+.ex72-gi { margin-top: 10px; }
+
 @media (max-width: 760px) {
   .rd-line { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
   .rd-line::before { display: none; }
-  .sk-row, .un-in { grid-template-columns: 1fr; }
+  .sk-row, .un-in, .qo-cards { grid-template-columns: 1fr; }
 }

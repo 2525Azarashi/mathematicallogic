@@ -1,5 +1,5 @@
 // ============================================================
-//  演習解説ページ  #/ex , #/ex/<ex1..ex5>
+//  演習解説ページ  #/ex , #/ex/<ex1..ex7>
 //  各問題を「考え方（対話）→ ヒント → 解答例 → 採点ポイント → よくあるミス → ラボ」で並べる
 // ============================================================
 import { h, talk, rich, fxs, tv, lab, callout, store, $$ } from '../lib/ui.js'
@@ -14,12 +14,14 @@ import { proofBuilder } from '../widgets/proof.js'
 import { staticTree } from '../widgets/proof-static.js'
 import { EX5 } from '../data/ex5.js'
 import { EX6 } from '../data/ex6.js'
+import { EX7 } from '../data/ex7.js'
 import { saveButton, linkTerms } from '../lib/features.js'
 import { splitChars } from '../lib/motion.js'
 
 // 問題ごとの「講義のどの章で復習するか」とラボ（ex1〜ex4）
 const SEE = { '1.1': ['lec01', 'set'], '1.2': ['lec01', 'power'], '1.3': ['lec01', 'rel'], '2.1': ['lec02', 'syntax'], '2.2': ['lec02', 'sem'], '2.3': ['lec02', 'valid'], '3.1': ['lec03', 'imp'], '3.2': ['lec03', 'clause'], '3.3': ['lec03', 'res'], '4.1': ['lec04', 'lk'], '4.2 (1)': ['lec04', 'proof'], '4.2 (2)': ['lec04', 'proof'] }
 const SEE6 = { '6.1': ['lec06', 'syntax'], '6.2': ['lec06', 'bind'], '6.3': ['lec06', 'lang'] }
+const SEE7 = { '7.1': ['lec07', 'eq'], '7.2': ['lec07', 'herbrand'] }
 const LABS = {
   '2.2': ['🧪 真理値表を触る', () => truthTable([parse('(P ∧ Q) ∨ ¬P'), parse('¬Q ⊃ ¬P')], { columns: 'all' }).el],
   '3.2': ['🧪 CNF 変換を 1 手ずつ', () => cnfStepper(parse('¬(P ∧ (Q ∨ R))'))],
@@ -29,6 +31,7 @@ const LABS = {
 }
 
 function problemsOf(set) {
+  if (set.no === 7) return EX7.map((p) => ({ ...p, see: SEE7[p.no] }))
   if (set.no === 6) return EX6.map((p) => ({ ...p, see: SEE6[p.no] }))
   if (set.no === 5) return EX5
   const lec = LECTURES.find((l) => l.slug === set.lec)
@@ -77,7 +80,7 @@ export function exercisesPage(root, anchor) {
   const total = sets.reduce((n, s) => n + s.probs.length, 0)
   const next = [...sets].reverse().find((s) => s.due > now)
 
-  const title = h('h1', h('span.xp-title-t', '演習解説'), h('span.sub', 'ex1〜ex5 を「考え方 → 解答例 → 採点ポイント」で'))
+  const title = h('h1', h('span.xp-title-t', '演習解説'), h('span.sub', 'ex1〜ex7 を「考え方 → 解答例 → 採点ポイント」で'))
   splitChars(title.firstChild)
   const hero = h('section.lec-hero.wrap', { 'data-scroll': '' }, h('div.ghost-word', { 'aria-hidden': 'true' }, 'EX'),
     h('div.crumbs', h('a', { href: '#/' }, 'ホーム'), '／', '演習解説'),
@@ -96,7 +99,7 @@ export function exercisesPage(root, anchor) {
   main.append(h('section.chap', { id: 'c-tips', dataset: { id: 'tips' } },
     h('div.chap-head.reveal', h('span.n', '✓'), h('h2', '答案の書き方 5 か条', h('small', 'How to write a full-score answer'))),
     talk(`R: 演習、提出したあとに「結局どう書けば満点だったの？」ってモヤモヤするんですよね。
-S[happy]: じゃあここで振り返ろう。各問題を **考え方 → ヒント → 解答例 → 採点ポイント → よくあるミス** の順に並べたよ。最新の ex5 も解説つき。
+S[happy]: じゃあここで振り返ろう。各問題を **考え方 → ヒント → 解答例 → 採点ポイント → よくあるミス** の順に並べたよ。最新の ex7 も解説つき。
 R: 解答例は、自分で解いてから開く…ですよね。
 S: その通り。ボタンを押すまで隠してあるから、まずヒントだけ見て手を動かしてね。`),
     h('div.xp-tips', ...REPORT_TIPS.map(([t, d], i) => h('div.xp-tip.reveal', h('span.i', String(i + 1)), h('b', t), h('p', { html: rich(d) }))))))
@@ -111,18 +114,27 @@ S: その通り。ボタンを押すまで隠してあるから、まずヒン�
         h('span.chip', `${s.probs.length} 問`),
         ...s.tags.map((t) => h('span.chip.tag', t)),
         lec ? h('a.chip.link', { href: `#/lec/${lec.slug}` }, `第${lec.no}回の講義ページ →`) : h('span.chip', { style: { opacity: .7 } }, '講義ページは準備中')))
-    if (s.no === 6) sec.append(
-      talk(`R: ex6 は述語論理の最初の課題。3 問とも「定義どおりに読めるか」の確認ですね。
+    if (s.no === 7) {
+      sec.append(talk(`R: ex7 は 7.1 が解釈 I のもとでの真偽値、7.2 がエルブラン領域・基底・基礎例ですね。
+S: そう！ 7.1 は「**∀ は ∨ に分配できない**」ことを具体的なモデルで体感する問題。7.2 は「**項だけで作った世界 H**」と「**原子論理式の集合 HB**」と「**変数を消した基礎例**」の 3 つの定義を正確に書き分ける問題だよ。
+R[think]: 7.2 の式の中だと Q(a, x) になってるけど、HB を書くときも第 1 引数は a だけですか？
+S[happy]: そこが一番ひっかかりやすいポイント！ ラボとヒントで確かめてみて。`))
+      if (s.due > now) sec.append(callout('warn', `<b>締切前の課題です（${fmt(s.due)}）。</b>まず「ヒント」と「ラボ」で自分の答えを作り、書き終えてから解答例で答え合わせしよう。`))
+    }
+    if (s.no === 6) {
+      sec.append(talk(`R: ex6 は述語論理の最初の課題。3 問とも「定義どおりに読めるか」の確認ですね。
 S: そう。6.1 は「項 → 原子論理式 → 論理式」の**どの段で失敗するか**、6.2 は**スコープ**、6.3 は**日本語を式に**。どれも第6回の定義カードがそのまま武器になる。
 R[think]: 6.3 の「どんな素数も」は ∀ と…∧？ ⊃？
-S[happy]: そこが最大の落とし穴。答えを開く前に、翻訳チェッカーで ∧ 版を試してみて。`),
-      callout('warn', '<b>締切前の課題です（11/5 木 23:59）。</b>まず「ヒント」と「ラボ」で自分の答えを作り、書き終えてから解答例で答え合わせしよう。'))
-    if (s.no === 5) sec.append(
-      talk(`R: ex5 は「健全性と完全性」の回。5.1 はシーケントの規則なのに、真偽値で証明しろって言われてます。
+S[happy]: そこが最大の落とし穴。答えを開く前に、翻訳チェッカーで ∧ 版を試してみて。`))
+      if (s.due > now) sec.append(callout('warn', '<b>締切前の課題です（11/5 木 23:59）。</b>まず「ヒント」と「ラボ」で自分の答えを作り、書き終えてから解答例で答え合わせしよう。'))
+    }
+    if (s.no === 5) {
+      sec.append(talk(`R: ex5 は「健全性と完全性」の回。5.1 はシーケントの規則なのに、真偽値で証明しろって言われてます。
 S: そこがこの回の主役。**健全性**（証明できる ⇒ トートロジ）は、「初期シーケントはトートロジ」＋「**どの規則も、前提がトートロジなら結論もトートロジ**」を確かめれば示せる。5.1 はその (¬右) の確認なんだ。
 R[think]: だから「同値変形を使うな」なんですね。使ったら、確かめたいことを先取りしちゃう。
-S[happy]: そういうこと。道具は「トートロジの定義」と「真偽値割り当ての定義 (4)〜(7)」だけ。5.2 は第4回と同じ Wang のアルゴリズムだよ。`),
-      callout('warn', '<b>締切前の課題です。</b>レポートは自分の理解のために自分で考えて解くもの（講義ページより）。まず「考え方」と「ヒント」で手を動かし、書き終えてから解答例で答え合わせしよう。'))
+S[happy]: そういうこと。道具は「トートロジの定義」と「真偽値割り当ての定義 (4)〜(7)」だけ。5.2 は第4回と同じ Wang のアルゴリズムだよ。`))
+      if (s.due > now) sec.append(callout('warn', '<b>締切前の課題です。</b>レポートは自分の理解のために自分で考えて解くもの（講義ページより）。まず「考え方」と「ヒント」で手を動かし、書き終えてから解答例で答え合わせしよう。'))
+    }
     s.probs.forEach((p) => sec.append(xpCard(p, s)))
     main.append(sec)
   })

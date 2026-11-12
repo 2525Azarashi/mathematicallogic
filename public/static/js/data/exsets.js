@@ -1,6 +1,7 @@
 // Exercise sets (演習問題). A set may exist before its lecture page is published (e.g. ex5).
 export const EXSETS = [
-  { no: 6, id: 'ex6', date: '10/30', lec: 'lec06', topic: '一階述語論理の構文', color: '#ff7a59', colorL: '#ffe4da', tags: ['論理式かどうか', '自由・束縛', '日本語 → 論理式'], fresh: true },
+  { no: 7, id: 'ex7', date: '11/06', lec: 'lec07', topic: '解釈とエルブラン領域', color: '#3fb6a8', colorL: '#d8f4f0', tags: ['∀ と ∨ の意味', 'エルブラン領域 H', 'エルブラン基底 HB', '基礎例'], fresh: true },
+  { no: 6, id: 'ex6', date: '10/30', lec: 'lec06', topic: '一階述語論理の構文', color: '#ff7a59', colorL: '#ffe4da', tags: ['論理式かどうか', '自由・束縛', '日本語 → 論理式'] },
   { no: 5, id: 'ex5', date: '10/23', lec: 'lec05', topic: '健全性と完全性', color: '#ff7aa8', colorL: '#ffe1ec', tags: ['恒真性の保持', '意味論で証明', 'Wang'] },
   { no: 4, id: 'ex4', date: '10/16', lec: 'lec04', topic: 'シーケント計算', color: '#9d7bff', colorL: '#ece5ff', tags: ['LK の規則', 'Wang のアルゴリズム'] },
   { no: 3, id: 'ex3', date: '10/09', lec: 'lec03', topic: '導出（融合）原理', color: '#2ec486', colorL: '#d3f6e6', tags: ['⊃ の意味', 'CNF', '反駁'] },
