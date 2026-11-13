@@ -41,15 +41,15 @@ export function timeline(lectures, upcoming) {
   const all = [...lectures.map((l) => ({ no: l.no, date: l.date, title: l.title.replace(/^.*— /, ''), live: true, color: l.color, slug: l.slug })), ...upcoming.map((u) => ({ ...u, title: u.title.replace(/^.*— /, '') }))].sort((a, b) => a.no - b.no)
   const n = all.length
   const W = 1100, H = 210, pad = 64, step = (W - pad * 2) / (n - 1)
-  const lastLive = 7 // 現在の進行位置（第7回 11/06 時点；12・13回は先行公開）
+  const lastLive = 8 // 現在の進行位置（第8回 11/13 時点；12・13回は先行公開）
   const progX = pad + (lastLive - 1) * step
   const dots = all.map((it, i) => {
     const x = pad + i * step
     const up = i % 2 === 0
     const fill = it.exam ? '#ff6b8b' : it.live ? it.color : '#fff'
     const lbl = it.title.length > 9 ? it.title.slice(0, 9) + '…' : it.title
-    const tag = it.live ? `<a href="#/lec/${it.slug}">` : '<g>'
-    const tagEnd = it.live ? '</a>' : '</g>'
+    const tag = it.live ? `<a href="#/lec/${it.slug}">` : it.href ? `<a href="${it.href}">` : '<g>'
+    const tagEnd = (it.live || it.href) ? '</a>' : '</g>'
     return `${tag}<g class="tl-dot ${it.live ? 'live' : ''} ${it.exam ? 'exam' : ''}" style="--d:${0.25 + i * 0.07}s">
       <line x1="${x}" y1="${H / 2}" x2="${x}" y2="${up ? H / 2 - 42 : H / 2 + 42}" stroke="${INK}" stroke-width="2" stroke-dasharray="3 4"/>
       <circle cx="${x}" cy="${H / 2}" r="${it.exam ? 15 : 13}" fill="${fill}" stroke="${INK}" stroke-width="2.5"/>
