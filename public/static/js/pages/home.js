@@ -38,7 +38,8 @@ function heroPlay() {
 
 export function homePage(root) {
   const done = (lec) => { const s = store.get('seen:' + lec.slug, []); return Math.round((s.length / lec.chapters.length) * 100) }
-  const latest = [...LECTURES].reverse().find((l) => !l.preview) || LECTURES[LECTURES.length - 1]
+  // 現在の講義進行に合わせた最新回（12・13回は後半の第3部先行公開）
+  const latest = [...LECTURES].reverse().find((l) => !l.preview && l.no <= 11) || LECTURES[LECTURES.length - 1]
   const now = new Date()
   const open = EXSETS.filter((l) => dueOf(l) > now).reverse()
   const lastEx = EXSETS[0]
@@ -52,7 +53,7 @@ export function homePage(root) {
   const hero = h('section.hero.wrap', { id: 'hero-section', 'data-scroll': '' }, h('div.ghost-word', { 'aria-hidden': 'true', style: { left: '-4%', bottom: '-4%' } }, 'P ∨ ¬P'), floaters,
     h('div.hero-grid',
       h('div',
-        h('div.hero-kicker', h('span.dot', '⊤'), `数理論理学 2026 ・ 第 ${LECTURES.length} 回まで公開中`),
+        h('div.hero-kicker', h('span.dot', '⊤'), `数理論理学 2026 ・ 全 ${LECTURES.length} 講義ページ公開中（第3部 非古典論理まで収録）`),
         h('h1.kinetic-h1', { 'data-hero-h1': '', html: `<span class="row"><span>Truth,</span></span><span class="row"><span><span class="flip no-split"><span class="flip-in"><span class="face t sym">⊤</span><span class="face back b sym">⊥</span></span></span> or <span class="flip no-split"><span class="flip-in"><span class="face b sym">⊥</span><span class="face back t sym">⊤</span></span></span>,</span></span><span class="row"><span>made <em class="hl-tiny">tiny.</em></span></span>` }),
         h('div.hero-rot', h('span', '論理式を'), rotator([{ html: '押して', color: '#ffd23f' }, { html: 'ほどいて', color: '#9bcaff' }, { html: 'ぶつけて', color: '#ff9aae' }, { html: '証明して', color: '#7ef0b9' }], { interval: 1900 }), h('span', '、わかる。')),
         h('p.hero-lead', { html: '論理式は、ちいさな<b>スイッチの回路</b>。<br><b>サカイ</b>先輩と<b>リョウガ</b>くんのおしゃべりを聞きながら、押して・ほどいて・ぶつけて、「正しさ」のしくみを手でつかむ数理論理学の遊び場です。' }),
@@ -71,7 +72,7 @@ export function homePage(root) {
 
   const mq = h('div', { style: { overflow: 'hidden', padding: '20px 0' } },
     marquee(['<span class="fx">P ∨ ¬P</span> is always <span class="hl-t">⊤</span>', 'touch the truth', '<span class="fx">⊢ A ⇔ ⊨ A</span>', 'unfold the formula', '<span class="fx">P ∧ ¬P</span> is always <span class="hl-b">⊥</span>', 'collide the clauses'], { speed: 38 }),
-    marquee(['構文論', '意味論', '真理値表', '連言標準形', '導出原理', '反駁', 'シーケント計算', 'Wang のアルゴリズム', '健全性', '完全性'], { speed: 46, reverse: true, cls: 'alt' }))
+    marquee(['構文論', '意味論', '真理値表', '連言標準形', '導出原理', 'シーケント計算', '健全性と完全性', 'エルブランの定理', '単一化', '様相論理 □◇', 'Kripke モデル', '時相論理', '直観主義・線形論理'], { speed: 46, reverse: true, cls: 'alt' }))
 
   const totalQuiz = LECTURES.reduce((s, l) => s + l.quiz.length, 0), totalEx = LECTURES.reduce((s, l) => s + l.exercises.length, 0)
   const stats = h('section.section.wrap', { style: { paddingBottom: '20px' } },
@@ -105,18 +106,25 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
       h('div.pr.reveal', h('div.ill', { html: `<svg viewBox="0 0 120 80" width="120"><path d="M60 16 L30 60 M60 16 L90 60" stroke="#2b2452" stroke-width="3" fill="none"/><circle cx="60" cy="16" r="13" fill="#ece5ff" stroke="#2b2452" stroke-width="3"/><text x="60" y="21" text-anchor="middle" font-size="15" font-weight="700" fill="#2b2452">⊃</text><rect x="16" y="50" width="28" height="22" rx="8" fill="#d3f6e6" stroke="#2b2452" stroke-width="3"/><text x="30" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#2b2452">P</text><rect x="76" y="50" width="28" height="22" rx="8" fill="#ffe1e8" stroke="#2b2452" stroke-width="3"/><text x="90" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#2b2452">Q</text></svg>` }), h('div.num', '02 ・ UNFOLD'), h('h3', 'ほどいて、構造を見る'), h('p', '構文木・CNF 変換・証明図。式を 1 手ずつほどくステッパーで、変形の「理由」を見失わない。')),
       h('div.pr.reveal', h('div.ill', { html: toto('top') }), h('div.num', '03 ・ CHECK'), h('h3', '解いて、すぐ確かめる'), h('p', '公式の演習問題をヒント → 解答例の順で。各回の類題は、正解するとサカイ先輩が理由まで解説。'))))
 
+  const allSessions = [...LECTURES.map((l) => ({ type: 'live', l, no: l.no })), ...UPCOMING.map((u) => ({ type: 'up', u, no: u.no }))].sort((a, b) => a.no - b.no)
   const list = h('div.lec-list')
-  LECTURES.forEach((l) => {
-    const p = done(l)
-    list.append(h('a.lec-card.reveal', { href: `#/lec/${l.slug}`, style: { '--c': l.color } },
-      h('div.no', h('small', l.preview ? '予習' : 'LEC'), h('b', String(l.no).padStart(2, '0'))),
-      h('div', h('div.sub', `${l.date}（金）`), h('h3', l.title), h('div.sub', l.sub), h('div.tiny-fx', { html: fxs(l.tinyFx) }), h('div.meta', ...l.tags.slice(0, 4).map((t) => h('span.chip', t)))),
-      h('span.go', '→'), h('span.prog', { style: { width: p + '%' } })))
+  allSessions.forEach((it) => {
+    if (it.type === 'live') {
+      const l = it.l, p = done(l)
+      list.append(h('a.lec-card.reveal', { href: `#/lec/${l.slug}`, style: { '--c': l.color } },
+        h('div.no', h('small', l.preview ? '予習' : l.no >= 12 ? 'PART 3' : 'LEC'), h('b', String(l.no).padStart(2, '0'))),
+        h('div', h('div.sub', `${l.date}（金）${l.no === 1 ? ' · on demand' : ''}`), h('h3', l.title), h('div.sub', l.sub), h('div.tiny-fx', { html: fxs(l.tinyFx) }), h('div.meta', ...l.tags.slice(0, 4).map((t) => h('span.chip', t)))),
+        h('span.go', '→'), h('span.prog', { style: { width: p + '%' } })))
+    } else {
+      const u = it.u
+      list.append(h('div.up.reveal', { class: u.exam ? 'exam' : '' },
+        h('b', String(u.no).padStart(2, '0')),
+        h('div', u.title, h('span.d', `${u.date}${u.exam ? ' ・ 試験' : u.no === 11 ? ' ・ 全体の振り返り' : ' ・ 講義プリントに合わせて公開予定'}`))))
+    }
   })
-  const up = h('div.up-list', ...UPCOMING.map((u) => h('div.up', { class: u.exam ? 'exam' : '' }, h('b', String(u.no).padStart(2, '0')), h('div', u.title, h('span.d', `${u.date}${u.exam ? '' : ' ・ 講義プリント待ち'}`)))))
   const lectures = h('section.section.wrap', { id: 'lectures' },
-    h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Lectures'), h('h2', { 'data-kinetic': 'rise' }, 'Step by step.', h('span.jp.no-split', '講義の回ごとに'))), h('p', '講義プリントが届くたびに、ここに 1 回ずつ増えていきます。カード下の色バーは読んだ割合。')),
-    list, up)
+    h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Lectures'), h('h2', { 'data-kinetic': 'rise' }, 'Step by step.', h('span.jp.no-split', '全 14 回の授業構成'))), h('p', '第 1〜7 回と第 3 部（第 12・13 回：非古典論理）を公開中。カード下の色バーは読んだ割合です。')),
+    list)
 
   const map = h('section.section.wrap', { style: { paddingTop: 0 } },
     h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Big picture'), h('h2', { 'data-kinetic': 'rise' }, 'Where are we?', h('span.jp.no-split', 'いま全体のどこ？'))), h('p', '命題論理で作った道具（意味論・導出・シーケント）を、そのまま 1 階述語論理へ持ち上げていく構成です。')),

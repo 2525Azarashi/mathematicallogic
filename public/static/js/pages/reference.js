@@ -14,7 +14,7 @@ export function glossaryPage(root) {
     grid.innerHTML = ''
     const hit = GLOSS.filter(([a, b, c]) => !q || (a + b + c).toLowerCase().includes(q))
     cnt.textContent = `${hit.length} 語`
-    hit.forEach(([jp, en, d, no]) => grid.append(h('div.gl', { tabindex: 0, role: 'button', 'aria-label': `${jp} の詳細を開く`, onclick: (e) => { if (!e.target.closest('a')) openTerm(jp) }, onkeydown: (e) => { if (e.key === 'Enter' && e.target === e.currentTarget) openTerm(jp) } }, h('h4', jp, h('small', en)), h('p', { html: fxs(d).replace(/2\^S/g, '2<sup>S</sup>') }), h('div.from', h('a', { href: `#/lec/lec0${no}` }, `第${no}回`)))))
+    hit.forEach(([jp, en, d, no]) => grid.append(h('div.gl', { tabindex: 0, role: 'button', 'aria-label': `${jp} の詳細を開く`, onclick: (e) => { if (!e.target.closest('a')) openTerm(jp) }, onkeydown: (e) => { if (e.key === 'Enter' && e.target === e.currentTarget) openTerm(jp) } }, h('h4', jp, h('small', en)), h('p', { html: fxs(d).replace(/2\^S/g, '2<sup>S</sup>') }), h('div.from', h('a', { href: `#/lec/lec${String(no).padStart(2, '0')}` }, `第${no}回`)))))
   }
   input.addEventListener('input', draw)
   draw()
