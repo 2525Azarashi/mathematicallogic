@@ -58,13 +58,23 @@ export function homePage(root) {
         h('div.hero-rot', h('span', '論理式を'), rotator([{ html: '押して', color: '#ffd23f' }, { html: 'ほどいて', color: '#9bcaff' }, { html: 'ぶつけて', color: '#ff9aae' }, { html: '証明して', color: '#7ef0b9' }], { interval: 1900 }), h('span', '、わかる。')),
         h('p.hero-lead', { html: '論理式は、ちいさな<b>スイッチの回路</b>。<br><b>サカイ</b>先輩と<b>リョウガ</b>くんのおしゃべりを聞きながら、押して・ほどいて・ぶつけて、「正しさ」のしくみを手でつかむ数理論理学の遊び場です。' }),
         h('div.hero-cta',
-          h('a.btn.primary', { href: `#/lec/${latest.slug}` }, `最新・第${latest.no}回「${latest.title.replace(/^.*— /, '')}」へ`, h('span.arr', '→')),
+          h('a.btn.primary', { href: '#/midterm' }, '🎯 中間試験対策（11/27）へ', h('span.arr', '→')),
+          h('a.btn', { href: `#/lec/${latest.slug}` }, `最新・第${latest.no}回へ`),
           h('a.btn', { href: '#/lec/lec01' }, '第1回から')),
         h('div.hero-meta',
           h('div', h('b', { 'data-count': LECTURES.length }), '公開中の回'),
           h('div', h('b', { 'data-count': LECTURES.reduce((s, l) => s + l.chapters.length, 0) }), '対話チャプター'),
           h('div', h('b', { 'data-count': 20, 'data-suffix': '+' }), 'さわれるラボ'))),
       heroPlay()))
+
+  const examDays = Math.ceil((new Date(2026, 10, 27, 15, 20, 0) - now) / 864e5)
+  const midtermBar = h('section.wrap', { style: { marginTop: '10px' } },
+    h('a.mt-banner.reveal', { href: '#/midterm' },
+      h('span.mt-bic', '🎯'),
+      h('div.mt-btxt',
+        h('b', '中間試験案内（11月27日(金) 15:20–16:20 · 4号館401教室）'),
+        h('span', '高得点エッセンシャルルート ＋ 第1〜8回の授業例題・演習25題の網羅確認 ＋ 60分記述式予想問題を公開中！')),
+      h('span.mt-bgo', examDays > 0 ? `あと ${examDays} 日 · 対策ページ →` : '対策ページ →')))
 
   const dueBar = h('section.wrap', { style: { marginTop: '10px' } }, h('div.due.reveal', h('div.clock', '⏰'),
     h('div', h('b', '演習レポートの締切'), h('span', '講義日翌週の木曜 23:59。完答じゃなくても、できるところまで出そう。')),
@@ -117,13 +127,19 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
         h('span.go', '→'), h('span.prog', { style: { width: p + '%' } })))
     } else {
       const u = it.u
-      list.append(h('div.up.reveal', { class: u.exam ? 'exam' : '' },
-        h('b', String(u.no).padStart(2, '0')),
-        h('div', u.title, h('span.d', `${u.date}${u.exam ? ' ・ 試験' : u.no === 11 ? ' ・ 全体の振り返り' : ' ・ 講義プリントに合わせて公開予定'}`))))
+      if (u.href) {
+        list.append(h('a.up.exam.mt-up-link.reveal', { href: u.href },
+          h('b', String(u.no).padStart(2, '0')),
+          h('div', `🎯 ${u.title}（15:20–16:20 · 4号館401教室）`, h('span.d', `${u.date} ・ 範囲：第1〜8回（ex1〜ex8） ・ 対策ページへ →`))))
+      } else {
+        list.append(h('div.up.reveal', { class: u.exam ? 'exam' : '' },
+          h('b', String(u.no).padStart(2, '0')),
+          h('div', u.title, h('span.d', `${u.date}${u.exam ? ' ・ 試験' : u.no === 11 ? ' ・ 全体の振り返り' : ' ・ 講義プリントに合わせて公開予定'}`))))
+      }
     }
   })
   const lectures = h('section.section.wrap', { id: 'lectures' },
-    h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Lectures'), h('h2', { 'data-kinetic': 'rise' }, 'Step by step.', h('span.jp.no-split', '全 14 回の授業構成'))), h('p', '第 1〜7 回と第 3 部（第 12・13 回：非古典論理）を公開中。カード下の色バーは読んだ割合です。')),
+    h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Lectures'), h('h2', { 'data-kinetic': 'rise' }, 'Step by step.', h('span.jp.no-split', '全 14 回の授業構成'))), h('p', '第 1〜8 回（中間試験範囲ぜんぶ）と第 3 部（第 12・13 回：非古典論理）を公開中。カード下の色バーは読んだ割合です。')),
     list)
 
   const map = h('section.section.wrap', { style: { paddingTop: 0 } },
@@ -136,11 +152,12 @@ S[happy]: だから記号にするんだ。$P ∨ ¬P$ は、P が何であっ�
   const tools = h('section.section.wrap', { style: { paddingTop: 0 } },
     h('div.sec-head.reveal', h('div', h('div.eyebrow', 'Toolbox'), h('h2', { 'data-kinetic': 'rise' }, 'Your logic kit.', h('span.jp.no-split', 'いつでも使える道具箱'))), h('p', 'レポートの検算や、試験前の確認に。')),
     h('div.tools',
+      h('a.tool.reveal', { href: '#/midterm', style: { '--bg': '#ffd23f' } }, h('div.ic', '🎯'), h('h3', '中間試験対策'), h('p', '11/27(金) 15:20・4号館401。第1〜8回の範囲チェックリスト、60分記述式・予想問題、欠席連絡テンプレ。')),
       h('a.tool.reveal', { href: '#/ex', style: { '--bg': '#ffe1ec' } }, h('div.ic', '✎'), h('h3', '演習解説'), h('p', 'ex1〜ex7 を「考え方の対話 → 解答例 → 採点ポイント → よくあるミス」で。最新の ex7 も。')),
       h('a.tool.reveal', { href: '#/tools', style: { '--bg': '#ece5ff' } }, h('div.ic', '⊨'), h('h3', '論理式ラボ'), h('p', '式を入れると構文木・真理値表・恒真判定・CNF・Wang の証明図まで一気に出る。')),
       h('a.tool.reveal', { href: '#/syllabus', style: { '--bg': '#ffe8d8' } }, h('div.ic', '§'), h('h3', 'シラバス'), h('p', '授業目的・到達目標・14 回の日程・成績評価・参考文献。目標ごとに学べる場所へリンク。')),
       h('a.tool.reveal', { href: '#/sheet', style: { '--bg': '#fff3c2' } }, h('div.ic', '≡'), h('h3', 'チートシート'), h('p', '同値の公式・CNF の手順・LK の 8 規則を 1 枚に。試験前の見直し用。')),
       h('a.tool.reveal', { href: '#/glossary', style: { '--bg': '#d3f6e6' } }, h('div.ic', 'Aa'), h('h3', '用語集'), h('p', '「充足可能」「初期シーケント」…出てきた言葉を検索。英語つき。'))))
 
-  root.append(hero, mq, dueBar, dailyQuestion(), cast, quote, principles, stats, lectures, map, tools)
+  root.append(hero, mq, midtermBar, dueBar, dailyQuestion(), cast, quote, principles, stats, lectures, map, tools)
 }
