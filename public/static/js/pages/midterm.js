@@ -9,7 +9,7 @@ import { splitChars } from '../lib/motion.js'
 import { parseFol, folHTML } from '../logic/fol.js'
 import { wang, parseSequent } from '../logic/core.js'
 import { staticTree } from '../widgets/proof-static.js'
-import { linkTerms } from '../lib/features.js'
+import { linkTerms, saveButton } from '../lib/features.js'
 import {
   EXAMPLE_META,
   quickDiagnosisWidget,
@@ -17,6 +17,17 @@ import {
   confusionMatrixWidget,
   mockExamTimerWidget,
 } from './midterm-tools.js'
+import {
+  proofWritingTrainerWidget,
+  spotTheFlawWidget,
+  examGivenDefinitionsDrawer,
+} from './midterm-writing.js'
+import {
+  EXAMPLE_INTUITION,
+  formulaXRayWidget,
+  microIntuitionLabs,
+  wholeCourseStoryMap,
+} from '../widgets/intuition.js'
 
 const F = (s) => `<span class="fx fol">${folHTML(parseFol(s))}</span>`
 
@@ -886,7 +897,8 @@ function comprehensiveExamplesSection(onMasteryChange) {
       if (onlyUnchecked && mastered.has(it.id)) return false
       if (searchQuery) {
         const meta = EXAMPLE_META[it.id] || { keys: [], trap: '' }
-        const hay = `${it.badge} ${it.title} ${it.q} ${it.point} ${it.why} ${meta.keys.join(' ')} ${meta.trap}`.toLowerCase()
+        const ie = EXAMPLE_INTUITION[it.id] || ['', '']
+        const hay = `${it.badge} ${it.title} ${it.q} ${it.point} ${it.why} ${ie[0]} ${ie[1]} ${meta.keys.join(' ')} ${meta.trap}`.toLowerCase()
         if (!hay.includes(searchQuery)) return false
       }
       return true
@@ -900,6 +912,7 @@ function comprehensiveExamplesSection(onMasteryChange) {
     items.forEach((it) => {
       const isDone = mastered.has(it.id)
       const meta = EXAMPLE_META[it.id] || { keys: [], trap: '' }
+      const ie = EXAMPLE_INTUITION[it.id]
 
       const setMastered = (val, targetEl) => {
         if (val) {
@@ -974,10 +987,17 @@ function comprehensiveExamplesSection(onMasteryChange) {
             h('span.mt-eb-kind', { class: it.kind }, it.badge),
             it.star ? h('span.mt-eb-star', '★ 高得点必須') : null),
           h('div.mt-ex-acts',
+            saveButton({ id: `mt:${it.id}`, kind: 'quiz', title: `[第${it.lec}回 ${it.badge}] ${it.title.replace(/\$/g, '')}`, sub: it.point.replace(/\*\*|\$/g, ''), href: '#/midterm/examples' }),
             h('a.chip', { href: it.href }, 'ラボで触る →'),
             h('label.mt-eb-chk', cb, '説明できる ✓'))),
         h('h4.mt-ex-title', { html: rich(it.title) }),
         h('div.mt-ex-q', { html: rich(it.q) }),
+        ie
+          ? h('div.ie-strip',
+              h('span.ie-s-i', { html: rich(`<b>💭 直感：</b>${ie[0]}`) }),
+              h('span.ie-s-arr', '⟹'),
+              h('span.ie-s-e', { html: rich(`<b>🎯 本質：</b>${ie[1]}`) }))
+          : null,
         h('div.mt-ex-pt', { html: rich(`<b>着眼点：</b>${it.point}`) }),
         det)
 
@@ -1073,8 +1093,46 @@ ${nm}（学籍番号：${sid}）`
         h('span.note-i', '連絡先：ktaka [at] kwansei.ac.jp（[at] を @ に変えて送信） / 標題：「数理論理学中間試験」'))))
 }
 
-// ---------- 予想問題カード ----------
+// ---------- 予想問題ごとの自動キーワード採点ルール ----------
+const MOCK_RUBRICS = {
+  '予想問題 1': [
+    ['空集合 ∅ を含む4要素', /∅|空集合|\{\s*\}/],
+    ['{a, b} 自身を含む', /\{\s*a\s*,\s*b\s*\}|自身/],
+    ['全域関数でない＋具体反例 (0,1) 等', /全域関数ではない|でない|0\s*-\s*1|-1/],
+    ['「任意の解釈 I（すべての解釈 I）」', /任意|すべて/],
+    ['否定と恒真（トートロジ）の定義を引用', /定義|¬|否定|トートロジ|恒真/],
+  ],
+  '予想問題 2': [
+    ['任意の解釈 I で前提 ⊤ を仮定', /任意|すべて/],
+    ['背理法：ある解釈 I で結論 ⊥ を仮定', /ある解釈|背理|⊥|偽/],
+    ['同値変形を使わず ⊃・∧ の定義で導出', /定義|かつ|または/],
+    ['Wang 証明図の規則名（⊃右・¬右・⊃左・¬左）', /⊃右|¬右|⊃左|¬左/],
+    ['「すべての葉が初期シーケントゆえトートロジ」', /初期シーケント/],
+  ],
+  '予想問題 3': [
+    ['P(x) は原子論理式であり「項ではない」', /項ではない|項でない/],
+    ['述語記号 Q の引数は項でなければならない', /引数|項/],
+    ['Q(x,y) の y は自由な出現、P(f(y)) の y は束縛', /自由な出現|スコープ/],
+    ['y は「自由変数であり，かつ束縛変数でもある」', /自由変数.*束縛変数|両方|かつ束縛/],
+  ],
+  '予想問題 4': [
+    ['v=1 と v=2 の両方で反例（R(1,1)=⊥, R(2,2)=⊥）を確認', /R\s*\(\s*1\s*,\s*1\s*\)|1.*2|両方/],
+    ['Skolem 関数 f(x) により ∀x(P(x)⊃Q(x,f(x)))', /f\s*\(\s*x\s*\)/],
+    ['定数がないため適当な定数 a で H₀={a} を用意', /定数|H_?0|\{\s*a\s*\}/],
+    ['HB は P(t) と Q(t₁,t₂) の和集合', /HB|Q\s*\(\s*t/],
+  ],
+  '予想問題 5': [
+    ['mgu σ = {x := g(z), y := a}', /g\s*\(\s*z\s*\)/],
+    ['後半は「出現検査（occur check）」により単一化不能', /出現検査|occur|f\s*\(\s*y\s*\).*y/],
+    ['最初に与えられた論理式の「否定」をとる', /否定|¬/],
+    ['各導出の節番号と mgu（{x:=a}, {y:=f(a)}）を明記', /mgu|σ|\{.*:=\s*f\s*\(\s*a\s*\)/i],
+    ['空節 ⊥ と導出原理の健全性から「恒真」を結論', /空節|⊥|健全性/],
+  ],
+}
+
+// ---------- 予想問題カード（下書きパッド＆自動ルーブリック採点つき） ----------
 function mockCard(p) {
+  const drafts = store.get('midterm-drafts', {})
   const steps = h('div.ex-steps'), reveal = h('div.ex-reveal')
   const add = (label, build, cls = '') => {
     const pane = h('div.pane')
@@ -1090,6 +1148,50 @@ function mockCard(p) {
     }, label)
     steps.append(b)
   }
+
+  add('✍️ 答案を下書き＆自動キーワード採点', () => {
+    const rub = MOCK_RUBRICS[p.no] || []
+    const ta = h('textarea.mt-draft-ta', {
+      rows: 5,
+      placeholder: 'ここに自分の言葉で答案を下書きしてみましょう（例：任意の解釈 I に対して… / 記号ボタンで ⊤ ⊥ ¬ ∧ ∨ ⊃ ∀ ∃ → も挿入できます）',
+      value: drafts[p.no] || '',
+    })
+    const symBar = h('div.mt-sym-bar',
+      h('span', '記号挿入：'),
+      ...['⊤', '⊥', '¬', '∧', '∨', '⊃', '∀', '∃', '→', '∅', '[[ ]]_I', '{x := a}'].map((sym) => h('button.mt-sym-b', {
+        type: 'button',
+        onclick: () => {
+          const s = ta.selectionStart ?? ta.value.length
+          const e = ta.selectionEnd ?? ta.value.length
+          ta.value = ta.value.slice(0, s) + sym + ta.value.slice(e)
+          ta.focus()
+          ta.selectionStart = ta.selectionEnd = s + sym.length
+          saveAndCheck()
+        },
+      }, sym)))
+    const rubOut = h('div.mt-rub-out')
+    function saveAndCheck() {
+      const cur = store.get('midterm-drafts', {})
+      cur[p.no] = ta.value
+      store.set('midterm-drafts', cur)
+      rubOut.innerHTML = ''
+      if (!rub.length) return
+      const txt = ta.value
+      let hits = 0
+      const chips = rub.map(([label, re]) => {
+        const ok = re.test(txt)
+        if (ok) hits++
+        return h('span.mt-kp', { class: ok ? 'hit' : '' }, `${ok ? '✓ ' : '○ '}${label}`)
+      })
+      rubOut.append(
+        h('div.mt-rub-hd', `リアルタイム要素チェック：${hits} / ${rub.length} 項目検出`),
+        h('div.mt-kp-chips', ...chips))
+    }
+    ta.addEventListener('input', saveAndCheck)
+    saveAndCheck()
+    return h('div.mt-draft-box', symBar, ta, rubOut)
+  }, 'yellow')
+
   add('💡 考え方のヒント', () => h('div.hint-box', h('h5', 'HINT'), h('div', { html: rich(p.hint) })))
   add('📋 記述の採点チェック', () => h('div.xp-points', h('h5', '記述式で見られるポイント'), h('ul', ...p.points.map((x) => h('li', { html: rich(x) })))))
   add('✓ 模範解答例', () => h('div.ans', h('h5', 'MODEL ANSWER'), p.answer()))
@@ -1128,16 +1230,20 @@ export function midtermPage(root) {
           h('span.chip', { style: { background: 'var(--bot-l)' } }, '🚫 持ち込み一切不可・途中退出不可'),
           h('span.chip', { style: { background: 'var(--top-l)' } }, '✍️ ほぼ記述式（必要な定義・規則は問題に記載）')),
         h('div.sy-links', { style: { marginTop: '12px' } },
-          h('a.btn.sm.yellow', { href: '#/midterm/route', onclick: (e) => { e.preventDefault(); jump('route') } }, '🩺 30秒弱点診断＆最短ルート'),
+          h('a.btn.sm.yellow', { href: '#/midterm/intuition', onclick: (e) => { e.preventDefault(); jump('intuition') } }, '🧠 直感→本質 高速理解ラボ'),
+          h('a.btn.sm', { href: '#/midterm/route', onclick: (e) => { e.preventDefault(); jump('route') } }, '🩺 30秒弱点診断＆最短ルート'),
+          h('a.btn.sm', { href: '#/midterm/writing', onclick: (e) => { e.preventDefault(); jump('writing') } }, '✍️ 記述穴埋め＆添削ラボ'),
           h('a.btn.sm', { href: '#/midterm/examples', onclick: (e) => { e.preventDefault(); jump('examples') } }, '⚡ 口頭即答カード＆全25例題'),
-          h('a.btn.sm', { href: '#/midterm/traps', onclick: (e) => { e.preventDefault(); jump('traps') } }, '⚖️ 混同8大トラップ対比表'))),
+          h('button.btn.sm', { type: 'button', onclick: () => window.print() }, '🖨 試験前まとめ印刷'))),
       cdBadge))
 
-  // TOC (8 sections)
+  // TOC (10 sections)
   const SECS = [
     ['info', '試験要項と当日の注意'],
     ['strategy', '出題方針と記述式の鉄則'],
+    ['intuition', '直感→本質 高速理解ラボ'],
     ['route', '弱点診断＆エッセンシャルルート'],
+    ['writing', '記述穴埋め＆減点添削ラボ'],
     ['examples', '口頭即答カード＆全25例題'],
     ['traps', '混同しやすい8大対比表'],
     ['scope', '第1〜8回 到達チェック'],
@@ -1200,32 +1306,52 @@ S: そう！ このページに **最短で高得点を狙う4フェーズのエ
       </div>
     </div>`)))
 
-  // ---------- Section 3: 高得点のためのエッセンシャルルート ----------
+  // ---------- Section 3: 直感 → 本質 高速理解ラボ ----------
+  main.append(h('section.chap', { id: 'c-intuition', dataset: { id: 'intuition' } },
+    h('div.chap-head.reveal', h('span.n', '3'), h('h2', '3秒で腑に落ちる「直感 → 本質」高速理解ラボ', h('small', 'From instant intuition to formal essence'))),
+    talk(`R: 定義や証明の文字を頭から読んでいると、記号の羅列で脳がフリーズして理解に時間がかかっちゃうんです…。
+S[happy]: 速く深く理解するコツは、いきなり形式定義を読むんじゃなくて **① 日常の直感イメージ（絵）をつかむ ⟹ ② だから形式定義がこう書かれている（本質）** の順で脳に入れること！
+R[wow]: 「なぜその定義が必要なのか」のストーリーと絵が先に見えていれば、記号が一気に意味のある言葉に見えてきますね！
+S: 下の **「全体本質ストーリーマップ」「数式 X線インスタント翻訳機」「10秒で納得マイクロ図解ラボ」** を3分触るだけで、第1〜8回の景色が一変するよ！`),
+    wholeCourseStoryMap(),
+    formulaXRayWidget(),
+    microIntuitionLabs()))
+
+  // ---------- Section 4: 高得点のためのエッセンシャルルート ----------
   main.append(h('section.chap', { id: 'c-route', dataset: { id: 'route' } },
-    h('div.chap-head.reveal', h('span.n', '3'), h('h2', '高得点のためのエッセンシャルルート', h('small', 'Essential 4-phase roadmap to 90%+'))),
+    h('div.chap-head.reveal', h('span.n', '4'), h('h2', '高得点のためのエッセンシャルルート', h('small', 'Essential 4-phase roadmap to 90%+'))),
     talk(`R: 第1回から第8回までまじめに最初から読み直すと、途中で時間切れになりそうです…。
 S[happy]: そこで **合計約3時間で90%以上を狙える「4フェーズ・エッセンシャルルート」** を組んだよ！ **構文の減点ゼロ化 → 手順で満点を稼ぐ計算 → 述語論理の反駁パイプライン → 差がつく定義証明（ex5.1型）** の順に進めるのが一番効率がいいんだ。`),
     essentialRouteSection()))
 
-  // ---------- Section 4: 例題・演習 25題の網羅的確認 ----------
+  // ---------- Section 5: 記述答案ライティング＆添削ラボ ----------
+  main.append(h('section.chap', { id: 'c-writing', dataset: { id: 'writing' } },
+    h('div.chap-head.reveal', h('span.n', '5'), h('h2', '実戦ライティング：記述骨格トレーナー ＆ 減点答案添削', h('small', 'Write deductively watertight answers'))),
+    talk(`R: 頭の中では「たぶんこういうこと」とわかっていても、いざ白紙の解答欄を前にすると「最初の一行目をどう書き始めるか」で手が止まります…！
+S[happy]: そこが記述式の一番の壁だね！ まずは下の **「記述答案・骨格穴埋めトレーナー」** で頻出4大パターンの接続詞と量化表現（「任意の解釈 $I$」「ある解釈 $I$」）を体に入れよう。そのあと **「減点答案・添削ドリル」** で採点者の目線を持てば、本番でのうっかり失点がゼロになるよ！`),
+    proofWritingTrainerWidget(),
+    h('h3.mt-subsec-h.reveal', '🔍 採点者目線で鍛える「減点答案・添削ドリル」（全4題）'),
+    spotTheFlawWidget()))
+
+  // ---------- Section 5: 例題・演習 25題の網羅的確認 ----------
   const exCatalogEl = comprehensiveExamplesSection((cnt) => {
     exMasteredCount = cnt
     syncProgress()
   })
   main.append(h('section.chap', { id: 'c-examples', dataset: { id: 'examples' } },
-    h('div.chap-head.reveal', h('span.n', '4'), h('h2', '授業中の例題・公式演習 網羅的確認（全25題）', h('small', 'Exhaustive review of lecture examples & ex1–ex8'))),
+    h('div.chap-head.reveal', h('span.n', '6'), h('h2', '授業中の例題・公式演習 網羅的確認（全25題）', h('small', 'Exhaustive review of lecture examples & ex1–ex8'))),
     talk(`R: 案内文の「**特に演習問題と授業中に行った例題を中心に、なぜこうなるのか説明ができるように**」を1ページで全部チェックできる一覧がほしかったです！
 S[happy]: 第1回〜第8回の **公式演習（ex1〜ex8相当）と授業ノートの重要例題・ひっかけ例を全25題** 漏れなく収録したよ。時間がなければまず **「★ エッセンシャル厳選」** フィルタを押して、自分の口で「なぜそうなるか」を説明してから答えを開いてみて！`),
     exCatalogEl))
 
-  // ---------- Section 4.5 (5): 混同しやすい8大対比マトリクス ----------
+  // ---------- Section 7: 混同しやすい8大対比マトリクス ----------
   main.append(h('section.chap', { id: 'c-traps', dataset: { id: 'traps' } },
-    h('div.chap-head.reveal', h('span.n', '5'), h('h2', '減点ゼロへ：混同しやすい概念 8大対比マトリクス', h('small', 'Critical distinctions & trap avoidance'))),
+    h('div.chap-head.reveal', h('span.n', '7'), h('h2', '減点ゼロへ：混同しやすい概念 8大対比マトリクス', h('small', 'Critical distinctions & trap avoidance'))),
     talk(`R: 勉強していると「CNF と DNF」「健全性と完全性」「異なる節の変数と同一節内の変数」みたいに、2択で迷うところが一番怖いです！
 S[happy]: 記述試験の失点の8割は、まさにその **「似ている2つの概念の取り違え」** から起きるんだ。試験直前の5分で見直せるように **第1〜8回の混同ポイント8組** を左右対比にまとめたよ！`),
     confusionMatrixWidget()))
 
-  // ---------- Section 6: 第1回〜第8回 インタラクティブ復習チェックリスト ----------
+  // ---------- Section 7: 第1回〜第8回 インタラクティブ復習チェックリスト ----------
   const scopeList = h('div.mt-scope-list')
   SCOPE_ITEMS.forEach((it) => {
     const ul = h('ul.mt-chk-list')
@@ -1258,7 +1384,7 @@ S[happy]: 記述試験の失点の8割は、まさにその **「似ている2�
   syncProgress()
 
   main.append(h('section.chap', { id: 'c-scope', dataset: { id: 'scope' } },
-    h('div.chap-head.reveal', h('span.n', '6'), h('h2', '第1回〜第8回 到達目標チェックリスト', h('small', 'Interactive skill checklist (Lec 1 – 8)'))),
+    h('div.chap-head.reveal', h('span.n', '8'), h('h2', '第1回〜第8回 到達目標チェックリスト', h('small', 'Interactive skill checklist (Lec 1 – 8)'))),
     h('p.sy-lead.reveal', '各回の到達スキルを確認してチェックを入れよう（ブラウザに自動保存されます）。'),
     scopeList,
     h('div.sy-links.reveal', { style: { marginTop: '16px' } },
@@ -1266,18 +1392,19 @@ S[happy]: 記述試験の失点の8割は、まさにその **「似ている2�
       h('a.btn.sm', { href: '#/sheet' }, '≡ チートシート（第1〜8回対応）で公式を確認 →'),
       h('a.btn.sm', { href: '#/review' }, '★ 自分の復習リストを開く →'))))
 
-  // ---------- Section 7: 60分想定 記述式・予想問題ドリル ----------
+  // ---------- Section 9: 60分想定 記述式・予想問題ドリル ----------
   const examTimerEl = mockExamTimerWidget()
   main.append(h('section.chap', { id: 'c-mock', dataset: { id: 'mock' } },
-    h('div.chap-head.reveal', h('span.n', '7'), h('h2', '実戦演習：60分 記述式・予想問題セット', h('small', 'Mock descriptive exam with 60-min timer'))),
-    talk(`R: エッセンシャルルートと全例題を確認したら、最後は本番と同じ 60 分形式で腕試しですね！
-S[happy]: 下の **60分ペースメーカー** をスタートさせて、紙とペンで実際に答案を書いてみよう。時間帯ごとに「今どの問題を解くべきか」のガイドが出るから、本番のペース配分が体に染み込むよ！`),
+    h('div.chap-head.reveal', h('span.n', '9'), h('h2', '実戦演習：60分 記述式・予想問題セット', h('small', 'Mock descriptive exam with 60-min timer & given definitions'))),
+    talk(`R: エッセンシャルルート・記述骨格・全例題を確認したら、最後は本番とまったく同じ条件（**問題用紙の定義・LK規則表だけを見る**）で腕試しですね！
+S[happy]: 下の **「📄 本番の問題用紙に記載される定義・LK規則シート」** を開いて、**60分ペースメーカー** をスタートさせよう。各問題の「✍️ 答案を下書き＆自動キーワード採点」に打ち込むと、必須要素が入っているかその場で判定できるよ！`),
     examTimerEl,
+    examGivenDefinitionsDrawer(),
     ...MOCK_PROBLEMS.map(mockCard)))
 
-  // ---------- Section 8: 欠席連絡・追試ルール ----------
+  // ---------- Section 10: 欠席連絡・追試ルール ----------
   main.append(h('section.chap', { id: 'c-absence', dataset: { id: 'absence' } },
-    h('div.chap-head.reveal', h('span.n', '8'), h('h2', 'やむを得ない欠席・追試の手続き', h('small', 'Absence & make-up exam policy'))),
+    h('div.chap-head.reveal', h('span.n', '10'), h('h2', 'やむを得ない欠席・追試の手続き', h('small', 'Absence & make-up exam policy'))),
     callout('warn', '<b>原則として病欠・公欠以外の欠席は不合格です。</b>万が一、病気などやむを得ない理由で欠席になる／なった場合は、<b>11月29日(日)までに</b>必ず下記フォーマットでメール連絡してください（<b>学校感染症に登録した人も本メールが必須</b>です）。'),
     html(`<div class="mt-policy reveal">
       <ul>

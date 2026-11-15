@@ -6,6 +6,7 @@
 //  4. 本番60分 シミュレーション・タイマー（フェーズ連動ガイドつき）
 // ============================================================
 import { h, html, rich, store, confettiAt, toast } from '../lib/ui.js'
+import { EXAMPLE_INTUITION } from '../widgets/intuition.js'
 
 // ---------- 1. 8問・弱点スピード診断データ（第1回〜第8回 各1問） ----------
 export const DIAG_QUESTIONS = [
@@ -332,6 +333,7 @@ export function flashcardDeckWidget(examples, onStatusChange) {
   let deckMode = 'due' // 'due' (未評価 + again + hard) | 'star' | 'all'
   let curIdx = 0
   let revealed = false
+  let hintShown = false
 
   const box = h('div.mt-fc-wrap.reveal')
   const headStats = h('div.mt-fc-stats')
@@ -368,7 +370,7 @@ export function flashcardDeckWidget(examples, onStatusChange) {
       modeBar.append(h('button.mt-fbtn', {
         type: 'button',
         class: deckMode === m ? 'on' : '',
-        onclick: () => { deckMode = m; curIdx = 0; revealed = false; renderModes(); renderCard() },
+        onclick: () => { deckMode = m; curIdx = 0; revealed = false; hintShown = false; renderModes(); renderCard() },
       }, label))
     })
     if (Object.keys(srs).length) {
@@ -377,7 +379,7 @@ export function flashcardDeckWidget(examples, onStatusChange) {
         onclick: () => {
           Object.keys(srs).forEach((k) => delete srs[k])
           store.set('midterm-srs', {})
-          curIdx = 0; revealed = false
+          curIdx = 0; revealed = false; hintShown = false
           syncStats(); renderModes(); renderCard()
         },
       }, '↺ 仕分けリセット'))
@@ -405,6 +407,7 @@ export function flashcardDeckWidget(examples, onStatusChange) {
       curIdx = 0
     }
     revealed = false
+    hintShown = false
     renderCard()
   }
 
@@ -419,22 +422,35 @@ export function flashcardDeckWidget(examples, onStatusChange) {
     if (curIdx >= deck.length) curIdx = 0
     const it = deck[curIdx]
     const meta = EXAMPLE_META[it.id] || { keys: [], trap: '' }
+    const ie = EXAMPLE_INTUITION[it.id]
     const curLv = srs[it.id]
 
     const navRow = h('div.mt-fc-nav',
       h('span.mt-fc-pos', `カード ${curIdx + 1} / ${deck.length}（第${it.lec}回 · ${it.badge}）`),
       h('div', { style: { display: 'flex', gap: '6px' } },
-        h('button.btn.sm', { type: 'button', onclick: () => { curIdx = (curIdx - 1 + deck.length) % deck.length; revealed = false; renderCard() } }, '← 前へ'),
-        h('button.btn.sm', { type: 'button', onclick: () => { curIdx = (curIdx + 1) % deck.length; revealed = false; renderCard() } }, '次へ →')))
+        h('button.btn.sm', { type: 'button', onclick: () => { curIdx = (curIdx - 1 + deck.length) % deck.length; revealed = false; hintShown = false; renderCard() } }, '← 前へ'),
+        h('button.btn.sm', { type: 'button', onclick: () => { curIdx = (curIdx + 1) % deck.length; revealed = false; hintShown = false; renderCard() } }, '次へ →')))
 
     const front = h('div.mt-fc-front',
       h('div.mt-fc-prompt', '🗣 声に出すか頭の中で「結論」と「なぜそうなるか（使う定義）」を30秒で言ってみよう：'),
       h('h4.mt-ex-title', { html: rich(it.title) }),
       h('div.mt-ex-q', { html: rich(it.q) }),
+      !revealed && ie && hintShown
+        ? h('div.ie-strip',
+            h('span.ie-s-i', { html: rich(`<b>💭 直感：</b>${ie[0]}`) }),
+            h('span.ie-s-arr', '⟹'),
+            h('span.ie-s-e', { html: rich(`<b>🎯 本質：</b>${ie[1]}`) }))
+        : null,
       curLv ? h('span.mt-fc-cur', `現在の判定：${curLv === 'easy' ? '◎ 即答できる' : curLv === 'hard' ? '△ あやしい' : '✕ 要復習'}`) : null)
 
     const back = revealed
       ? h('div.mt-fc-back',
+          ie
+            ? h('div.ie-strip',
+                h('span.ie-s-i', { html: rich(`<b>💭 直感：</b>${ie[0]}`) }),
+                h('span.ie-s-arr', '⟹'),
+                h('span.ie-s-e', { html: rich(`<b>🎯 本質：</b>${ie[1]}`) }))
+            : null,
           meta.keys.length
             ? h('div.mt-kp-box',
                 h('b', '🔑 答案に必ず入れる採点キーワード：'),
@@ -448,6 +464,12 @@ export function flashcardDeckWidget(examples, onStatusChange) {
             h('button.mt-rbtn.hard', { type: 'button', onclick: (e) => rate(it.id, 'hard', e.currentTarget) }, '△ 惜しい（後で確認）'),
             h('button.mt-rbtn.easy', { type: 'button', onclick: (e) => rate(it.id, 'easy', e.currentTarget) }, '◎ 定義から即答できた！')))
       : h('div.mt-fc-reveal-bar',
+          ie && !hintShown
+            ? h('button.btn.sm', {
+                type: 'button',
+                onclick: () => { hintShown = true; renderCard() },
+              }, '💡 3秒の「直感→本質」ヒントだけ見る')
+            : null,
           h('button.btn.yellow', {
             type: 'button',
             onclick: () => { revealed = true; renderCard() },
@@ -460,12 +482,34 @@ export function flashcardDeckWidget(examples, onStatusChange) {
   renderModes()
   renderCard()
 
+  // Keyboard shortcuts when flashcard box is focused or clicked
+  box.tabIndex = 0
+  box.addEventListener('keydown', (e) => {
+    if (e.target.matches?.('input, textarea, select')) return
+    const deck = getDeck()
+    if (!deck.length) return
+    if (e.key === ' ') {
+      e.preventDefault()
+      if (!revealed) { revealed = true; renderCard() }
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      curIdx = (curIdx + 1) % deck.length; revealed = false; renderCard()
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      curIdx = (curIdx - 1 + deck.length) % deck.length; revealed = false; renderCard()
+    } else if (revealed && (e.key === '1' || e.key === '2' || e.key === '3')) {
+      e.preventDefault()
+      const it = deck[curIdx]
+      rate(it.id, e.key === '1' ? 'again' : e.key === '2' ? 'hard' : 'easy', box)
+    }
+  })
+
   box.append(
     h('div.mt-fc-head',
       h('div',
         h('span.ig-tag', 'ACTIVE RECALL · 最速記憶定着モード'),
-        h('h4', { style: { margin: '4px 0 2px', fontSize: '16.5px', fontWeight: 900 } }, '⚡ 30秒 口頭即答フラッシュカード（苦手自動抽出）'),
-        h('p', { style: { margin: 0, fontSize: '12.5px', fontWeight: 700, color: 'var(--ink-2)' } }, '読むだけの復習より「思い出してから答えを見る」方が定着率は約2〜3倍！「◎ 即答できる」になった問題は自動でデッキから外れます。')),
+        h('h4', { style: { margin: '4px 0 2px', fontSize: '16.5px', fontWeight: 900 } }, '⚡ 30秒 口頭即答フラッシュカード（苦手自動抽出・キーボード対応）'),
+        h('p', { style: { margin: 0, fontSize: '12.5px', fontWeight: 700, color: 'var(--ink-2)' } }, 'カード枠内クリック後は Space でめくる ／ 1(✕)・2(△)・3(◎) で高速仕分け ／ ← → で移動できます。')),
       headStats),
     modeBar,
     stage)

@@ -73,7 +73,7 @@ export function homePage(root) {
       h('span.mt-bic', '🎯'),
       h('div.mt-btxt',
         h('b', '中間試験案内（11月27日(金) 15:20–16:20 · 4号館401教室）'),
-        h('span', '高得点エッセンシャルルート ＋ 第1〜8回の授業例題・演習25題の網羅確認 ＋ 60分記述式予想問題を公開中！')),
+        h('span', '「直感→本質」高速理解ラボ ＋ 高得点ルート ＋ 全25例題（1行直感ブリッジ付）＋ 記述穴埋め＆60分予想問題を公開中！')),
       h('span.mt-bgo', examDays > 0 ? `あと ${examDays} 日 · 対策ページ →` : '対策ページ →')))
 
   const dueBar = h('section.wrap', { style: { marginTop: '10px' } }, h('div.due.reveal', h('div.clock', '⏰'),

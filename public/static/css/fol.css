@@ -681,12 +681,138 @@
 .mt-tm-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .mt-tm-phase { font-size: 13px; font-weight: 900; color: var(--ink); }
 
+/* 記述骨格トレーナー (#/midterm/writing) */
+.mt-wt-wrap { background: linear-gradient(135deg, #f4f0ff 0%, #eef7ff 100%); border: var(--bw) solid var(--ink); border-radius: 22px; padding: 14px 16px; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 10px; }
+.mt-wt-body { background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.mt-wt-goal { background: var(--paper); border: 1.5px solid var(--rule); border-radius: 12px; padding: 8px 12px; font-size: 13.5px; font-weight: 700; line-height: 1.65; }
+.mt-wt-sheet { font-size: 14px; line-height: 2.05; }
+.mt-wt-sel { border: 2px solid var(--ink); border-radius: 10px; background: #fff3c2; padding: 2px 8px; margin: 0 3px; font-size: 13px; font-weight: 900; font-family: inherit; cursor: pointer; max-width: 100%; }
+.mt-wt-sel.ok { background: var(--top-l); border-color: #0f7a4e; color: #0a5838; }
+.mt-wt-sel.ng { background: var(--bot-l); border-color: #c8284a; color: #9e1835; }
+.mt-wt-ok { background: var(--top-l); border: 2px solid #0f7a4e; border-radius: 12px; padding: 9px 12px; font-size: 13px; font-weight: 800; line-height: 1.65; }
+.mt-wt-prog { background: var(--or-l); border: 1.5px solid var(--ink); border-radius: 12px; padding: 7px 12px; font-size: 12.5px; font-weight: 800; }
+.mt-wt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* 減点答案・添削ドリル */
+.mt-subsec-h { margin: 22px 0 10px; font-size: 17px; font-weight: 900; }
+.mt-flaw-wrap { display: flex; flex-direction: column; gap: 12px; }
+.mt-flaw-card { background: #fff; border: var(--bw) solid var(--ink); border-radius: 20px; padding: 14px 16px; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 8px; }
+.mt-flaw-q { font-size: 13.5px; font-weight: 800; line-height: 1.6; }
+.mt-flaw-bad { background: #fff4f6; border: 1.8px dashed #c8284a; border-radius: 13px; padding: 9px 12px; font-size: 13px; font-weight: 700; line-height: 1.7; }
+.mt-flaw-opts { display: flex; flex-direction: column; gap: 6px; }
+.mt-flaw-fix { background: var(--top-l); border: 1.8px solid var(--ink); border-radius: 13px; padding: 9px 12px; font-size: 13px; font-weight: 700; line-height: 1.7; }
+
+/* 本番定義・LK規則シート ＆ 予想問題 下書き・自動ルーブリック採点 */
+.mt-given-sheet { background: #fff; border: var(--bw) solid var(--ink); border-radius: 20px; padding: 12px 16px; margin-bottom: 14px; box-shadow: var(--sh-s); }
+.mt-given-sheet > summary { cursor: pointer; font-weight: 900; font-size: 14.5px; color: #5b38d6; }
+.mt-given-in { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.mt-given-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mt-given-box { background: var(--paper); border: 1.8px solid var(--ink); border-radius: 14px; padding: 10px 12px; }
+.mt-given-box h6 { margin: 0 0 6px; font-size: 12.5px; font-weight: 900; }
+.mt-given-ul { margin: 0; padding-left: 1.2em; font-size: 12.5px; font-weight: 700; line-height: 1.75; }
+.mt-lk-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
+.mt-lkm-cell { background: #fff; border: 1.5px solid var(--ink); border-radius: 10px; padding: 6px 8px; text-align: center; font-size: 12px; font-weight: 800; }
+.mt-lkm-cell .rn { display: inline-block; font-size: 11px; font-weight: 900; background: #ece5ff; border: 1px solid var(--ink); border-radius: 999px; padding: 0 7px; margin-bottom: 3px; }
+.mt-lkm-cell .bar { border-top: 1.8px solid var(--ink); margin: 3px 0; }
+
+.mt-draft-box { background: #fffdf5; border: 2px solid var(--ink); border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.mt-sym-bar { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; font-size: 12px; font-weight: 900; }
+.mt-sym-b { border: 1.5px solid var(--ink); border-radius: 8px; background: #fff; padding: 2px 8px; font-family: var(--f-fx); font-size: 13px; font-weight: 800; cursor: pointer; }
+.mt-sym-b:hover { background: #ffd23f; }
+.mt-draft-ta { width: 100%; border: 2px solid var(--ink); border-radius: 12px; padding: 8px 10px; font-size: 13.5px; font-weight: 700; line-height: 1.65; background: #fff; font-family: inherit; resize: vertical; }
+.mt-rub-out { display: flex; flex-direction: column; gap: 5px; }
+.mt-rub-hd { font-size: 12px; font-weight: 900; color: #0f7a4e; }
+.mt-kp.hit { background: var(--top-l); border-color: #0f7a4e; color: #0a5838; font-weight: 900; }
+
+/* ============================================================
+   Intuition -> Essence 高速理解エンジン (.ie-*)
+   ============================================================ */
+.ie-banner-wrap { margin-top: 12px; margin-bottom: 6px; }
+.ie-banner { background: linear-gradient(135deg, #fffdf0 0%, #eef7ff 52%, #f4f0ff 100%); border: var(--bw) solid var(--ink); border-radius: 22px; padding: 14px 18px; box-shadow: var(--sh); display: flex; flex-direction: column; gap: 10px; }
+.ie-b-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ie-b-meta { font-size: 15px; font-weight: 900; color: var(--ink); }
+.ie-b-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: stretch; }
+.ie-b-card { border: 2px solid var(--ink); border-radius: 15px; padding: 10px 13px; display: flex; flex-direction: column; gap: 5px; }
+.ie-b-card.intu { background: #fff8db; }
+.ie-b-card.ess { background: #e8faf1; }
+.ie-b-card p { margin: 0; font-size: 13.3px; font-weight: 700; color: var(--ink); line-height: 1.65; }
+.ie-k { font-family: var(--f-ui); font-size: 11.5px; font-weight: 900; letter-spacing: .03em; color: #5b38d6; }
+.ie-b-card.ess .ie-k { color: #0b6b43; }
+.ie-b-arr { align-self: center; font-size: 20px; font-weight: 900; background: var(--ink); color: #ffd23f; border-radius: 999px; padding: 2px 10px; line-height: 1.2; }
+.ie-b-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ie-step-chip { font-size: 12px; font-weight: 900; background: #fff; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; }
+
+/* 全25例題＆フラッシュカード内 1行「直感 ⟹ 本質」ストリップ */
+.ie-strip { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; background: linear-gradient(90deg, #fff9dd 0%, #eafaf2 100%); border: 1.8px solid var(--ink); border-radius: 13px; padding: 7px 11px; font-size: 12.8px; font-weight: 700; line-height: 1.55; }
+.ie-s-i b { color: #9a5b00; }
+.ie-s-e b { color: #0b6b43; }
+.ie-s-arr { font-weight: 900; background: var(--ink); color: #ffd23f; border-radius: 999px; padding: 1px 7px; font-size: 12px; }
+
+/* 全体本質ストーリーマップ */
+.ie-story { background: #fff; border: var(--bw) solid var(--ink); border-radius: 22px; padding: 14px 16px; margin: 14px 0; box-shadow: var(--sh-s); }
+.ie-story-lead { margin: 6px 0 12px; font-size: 13.5px; font-weight: 700; background: #fff8db; border: 1.5px solid var(--ink); border-radius: 12px; padding: 8px 12px; line-height: 1.65; }
+.ie-story-track { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ie-st-node { display: flex; flex-direction: column; gap: 5px; text-decoration: none; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 15px; padding: 10px 12px; transition: transform .14s, background .14s; }
+.ie-st-node:hover { transform: translateY(-2px); background: #fff3c2; }
+.ie-st-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ie-st-top .n { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #ffd23f; font-family: var(--f-ui); font-size: 12px; font-weight: 900; display: inline-flex; align-items: center; justify-content: center; }
+.ie-st-top b { font-size: 13px; font-weight: 900; }
+.ie-st-top em { font-style: normal; font-size: 11.5px; font-weight: 900; background: #ece5ff; border: 1px solid var(--ink); border-radius: 999px; padding: 0 7px; }
+.ie-st-node p { margin: 0; font-size: 12.4px; font-weight: 700; color: var(--ink-2); line-height: 1.55; }
+
+/* 数式 X線インスタント翻訳機 */
+.ie-xray-box { background: linear-gradient(135deg, #eef7ff 0%, #f7f3ff 100%); border: var(--bw) solid var(--ink); border-radius: 22px; padding: 14px 16px; margin: 14px 0; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 10px; }
+.ie-xray-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.ie-xray-stage { background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; padding: 13px 15px; display: flex; flex-direction: column; gap: 10px; }
+.ie-xray-fx { font-size: 20px; font-weight: 900; text-align: center; background: var(--paper); border: 2px dashed var(--ink); border-radius: 14px; padding: 10px 12px; overflow-x: auto; }
+.ie-xray-parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 8px; }
+.ie-xp-card { background: #f9f7ff; border: 1.8px solid var(--ink); border-radius: 13px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; }
+.ie-xp-sym { align-self: flex-start; font-size: 14px; font-weight: 900; background: #ffd23f; border: 1.5px solid var(--ink); border-radius: 8px; padding: 1px 8px; }
+.ie-xp-role { font-size: 12.5px; font-weight: 900; color: #5b38d6; }
+.ie-xp-card small { font-size: 12.2px; font-weight: 700; color: var(--ink-2); line-height: 1.5; }
+
+/* 10秒で納得 マイクロ図解ラボ（3連） */
+.ie-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0; }
+.ie-mini-card { background: #fff; border: var(--bw) solid var(--ink); border-radius: 20px; padding: 12px 14px; box-shadow: var(--sh-s); display: flex; flex-direction: column; gap: 8px; }
+.ie-mini-card h5 { margin: 0; font-size: 14px; font-weight: 900; line-height: 1.45; }
+.ie-mini-body { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.ie-qmat { width: 100%; border-collapse: collapse; font-size: 12px; font-weight: 800; text-align: center; }
+.ie-qmat th, .ie-qmat td { border: 1.5px solid var(--ink); padding: 4px 5px; }
+.ie-qmat th { background: var(--paper); }
+.ie-qfoot td, .ie-qchk { background: #faf8ff; font-size: 11.5px; }
+.ie-mini-verdicts { display: flex; flex-direction: column; gap: 5px; }
+.ie-mv { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; border: 1.5px solid var(--ink); border-radius: 10px; padding: 5px 8px; font-size: 12px; font-weight: 800; }
+.ie-mv.ok { background: var(--top-l); }
+.ie-mv.ng { background: var(--bot-l); }
+.ie-sk-toggle { display: flex; flex-direction: column; gap: 5px; }
+.ie-sk-vis { background: var(--paper); border: 1.8px solid var(--ink); border-radius: 13px; padding: 9px 11px; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; font-weight: 700; line-height: 1.6; }
+.ie-sk-vis p { margin: 0; }
+.ie-sk-map { display: flex; flex-wrap: wrap; gap: 6px; }
+.ie-sk-map > span { background: #fff; border: 1.5px solid var(--ink); border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 800; }
+
+@media (max-width: 960px) {
+  .ie-mini-grid, .ie-story-track { grid-template-columns: 1fr; }
+}
 @media (max-width: 760px) {
-  .mt-info-grid, .mt-rmust, .mt-diag-grid, .mt-cmp-two { grid-template-columns: 1fr; }
+  .ie-b-flow, .ie-strip { grid-template-columns: 1fr; }
+  .ie-b-arr, .ie-s-arr { justify-self: center; }
+}
+
+@media (max-width: 760px) {
+  .mt-info-grid, .mt-rmust, .mt-diag-grid, .mt-cmp-two, .mt-given-grid { grid-template-columns: 1fr; }
+  .mt-lk-mini { grid-template-columns: repeat(2, 1fr); }
   .mt-cmp-vs { justify-self: center; }
   .mt-60grid { grid-template-columns: 1fr 1fr; }
   .mt-score-bar { flex-wrap: wrap; }
   .mt-sb-seg { width: 50% !important; border-bottom: 1.5px solid var(--ink); }
+}
+
+@media print {
+  header, footer, .toc, .read-bar, .ghost-word, .mt-fc-wrap, .mt-diag-box, .mt-timer-card, .mt-ex-ctrl, .sy-links, .ex-steps { display: none !important; }
+  .lec-layout { display: block !important; }
+  body, .mt-rcard, .mt-ex-card, .mt-cmp-card, .sheet-card, .ie-banner, .ie-story, .ie-xray-box, .ie-mini-card, .ie-strip { background: #fff !important; box-shadow: none !important; }
+  details.mt-ex-why, details.mt-given-sheet { display: block !important; }
+  .mt-rcard, .mt-ex-card, .mt-cmp-card, .ie-banner, .ie-mini-card { break-inside: avoid; margin-bottom: 10px; }
 }
 
 @media (max-width: 760px) {
