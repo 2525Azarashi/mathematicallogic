@@ -109,6 +109,10 @@ export function siteItems() { return _items || (_items = [
     { kind: `第${l.no}回`, kindCls: 'ex', t: `演習問題 ex${l.no}`, href: `#/lec/${l.slug}/ex`, kw: 'exercise 演習 レポート' },
   ]),
   ...GLOSS.map(([jp, en]) => ({ kind: '用語', kindCls: 'term', t: jp, term: jp, kw: en })),
+  { kind: '試験', kindCls: 'ex', t: '🎯 中間試験対策（11/27 15:20 · 弱点診断・即答カード・全25例題・予想問題）', href: '#/midterm', kw: 'midterm exam 中間試験 試験 テスト 対策 予想問題 欠席 追試 401 エッセンシャル 例題' },
+  { kind: '試験', kindCls: 'ex', t: '🩺 30秒弱点診断 ＆ 高得点エッセンシャルルート（4フェーズ攻略）', href: '#/midterm/route', kw: 'route essential 診断 弱点 エッセンシャル ルート 高得点 時間配分 中間試験' },
+  { kind: '試験', kindCls: 'ex', t: '⚡ 口頭即答フラッシュカード ＆ 全25例題・演習の網羅確認', href: '#/midterm/examples', kw: 'examples flashcard フラッシュカード 例題 網羅 演習 ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 なぜ 中間試験' },
+  { kind: '試験', kindCls: 'ex', t: '⚖️ 混同しやすい概念 8大対比マトリクス（減点トラップ回避）', href: '#/midterm/traps', kw: 'traps 混同 比較 対比 CNF DNF 健全性 完全性 Skolem エルブラン 中間試験' },
   { kind: '演習', kindCls: 'ex', t: '演習解説（ex1〜ex7・採点ポイント・よくあるミス）', href: '#/ex', kw: 'exercise 解説 解答 レポート answer' },
   ...[[7, '解釈とエルブラン領域', 'エルブラン領域 エルブラン基底 基礎例 7.1 7.2 H HB'], [6, '一階述語論理の構文', '論理式かどうか 自由 束縛 出現 PRIME DIV2 6.1 6.2 6.3'], [5, '健全性と完全性', '恒真性の保持 ¬右 意味論 Wang 5.1 5.2'], [4, 'シーケント計算', 'LK ∧左 Wang 4.1 4.2'], [3, '導出原理', '⊃ CNF 反駁 3.1 3.2 3.3'], [2, '言語・構文論・意味論', '論理式の定義 真理値表 恒真 2.1 2.2 2.3'], [1, '集合と関係', 'べき集合 全域関数 1.1 1.2 1.3']]
     .map(([n, t, kw]) => ({ kind: '演習', kindCls: 'ex', t: `ex${n} 解説：${t}`, href: `#/ex/ex${n}`, kw })),

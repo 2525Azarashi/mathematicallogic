@@ -44,6 +44,22 @@ export function sheetPage(root) {
     h('div.rules', ...RULES.map(([n, p, c]) => h('div.rule', { class: p.includes('|') ? 'br' : '' }, h('span.rn', n), p.includes('|') ? h('span.split', '枝分かれ') : null, h('div.prem', ...p.split('　|　').map((x) => h('span', { html: fxs(x) }))), h('div.ln'), h('div.conc', { html: fxs(c) })))),
     h('p', { style: { fontSize: '13px', fontWeight: 700, color: 'var(--ink-2)', margin: '14px 0 0' }, html: rich('覚え方：¬ は反対側へ移る ／ 左の ∧・右の ∨ はカンマになる ／ 右の ∧・左の ∨・左の ⊃ は枝分かれ。初期シーケント = 両辺が命題記号だけで、共通の記号を含む。') }))
   const sem = h('div.sheet-card', { style: { gridColumn: '1 / -1' } }, h('h3', '真偽値割り当て（第2回）'), h('div', { html: `<table class="tbl"><thead><tr><th>P</th><th>Q</th><th>${fxHTML('¬P')}</th><th>${fxHTML('P ∧ Q')}</th><th>${fxHTML('P ∨ Q')}</th><th>${fxHTML('P ⊃ Q')}</th></tr></thead><tbody>${[[1, 1], [1, 0], [0, 1], [0, 0]].map(([p, q]) => `<tr>${[p, q, !p, p && q, p || q, !p || q].map((v) => `<td><span class="tv ${v ? 't' : 'f'}">${v ? '⊤' : '⊥'}</span></td>`).join('')}</tr>`).join('')}</tbody></table>` }))
-  root.append(h('section.lec-hero.wrap', h('div.crumbs', h('a', { href: '#/' }, 'ホーム'), '／', 'チートシート'), h('div.lec-hero-grid', { style: { gridTemplateColumns: 'auto 1fr' } }, h('div.big-no', { style: { background: '#fff3c2', fontFamily: 'var(--f-fx)' } }, '≡'), h('div', h('h1', 'チートシート', h('span.sub', '試験前にこれ 1 枚。印刷にも対応'))))),
-    h('section.wrap', { style: { paddingBottom: '60px' } }, h('div.sheet-grid', sem, lawCard, cnf, lk)))
+  const folEq = h('div.sheet-card',
+    h('h3', '1階述語論理：量化子の同値・冠頭形・Skolem化', h('span.chip', '第6〜7回')),
+    h('div', { html: rich(`<ul style="margin:0;padding-left:1.3em;font-weight:700;font-size:13.8px;line-height:2">
+      <li><b>優先順位：</b>$⊃ < ∨ < ∧ < ¬$（左優先），<b>量化記号 $∀, ∃$ は結合記号より強い</b>（例：$∀xP(x) ⊃ Q(x)$ は $(∀xP(x)) ⊃ Q(x)$）</li>
+      <li><b>ド・モルガン：</b>$¬∀x α[x] = ∃x(¬α[x])$　／　$¬∃x α[x] = ∀x(¬α[x])$</li>
+      <li><b>分配の可否：</b>$∀x(α ∧ β) = ∀xα ∧ ∀xβ$，$∃x(α ∨ β) = ∃xα ∨ ∃xβ$（<b>$∀$ と $∨$、$∃$ と $∧$ はそのまま分配不可！</b> 別変数 $z$ につけかえて前に出す）</li>
+      <li><b>Skolem 化（充足不能性を保持・同値ではない）：</b>冠頭形で $∃y$ の前に $∀$ がなければ新<b>定数 $c$</b>、前に $∀x_1,…,∀x_m$ があれば新<b>関数 $f(x_1,…,x_m)$</b> に置換</li>
+    </ul>`) }))
+  const folRes = h('div.sheet-card',
+    h('h3', 'エルブラン・単一化(mgu)・1階導出手順', h('span.chip', '第7〜8回')),
+    h('div', { html: rich(`<ol style="margin:0;padding-left:1.3em;font-weight:700;font-size:13.8px;line-height:1.95">
+      <li><b>エルブラン領域 $H$：</b>定数の集合 $H_0$（<b>定数がなければ $H_0=\\{a\\}$</b>）に関数記号を反復適用した基礎項全体</li>
+      <li><b>エルブラン基底 $HB$：</b>式中の述語記号に $H$ の要素を入れた<b>原子論理式</b>全体 ／ <b>基礎例：</b>先頭の $∀$ を外し変数を $H$ の要素で置換</li>
+      <li><b>単一化（mgu）：</b>左から最初の不一致集合を解消。<b>記号の衝突</b>か<b>出現検査（$x$ と $f(x)$）</b>で失敗</li>
+      <li><b>1階の反駁証明：</b>示したい式 $F$ を <b>①否定 $¬F$ → ②冠頭形 → ③Skolem化 → ④CNF・節集合 → ⑤共通変数を別名に分離し mgu $\\sigma$ で導出 → ⑥空節 $\\bot$</b>（健全性より $F$ は恒真）</li>
+    </ol>`) }))
+  root.append(h('section.lec-hero.wrap', h('div.crumbs', h('a', { href: '#/' }, 'ホーム'), '／', 'チートシート'), h('div.lec-hero-grid', { style: { gridTemplateColumns: 'auto 1fr' } }, h('div.big-no', { style: { background: '#fff3c2', fontFamily: 'var(--f-fx)' } }, '≡'), h('div', h('h1', 'チートシート', h('span.sub', '中間試験範囲（第1〜8回：命題論理〜1階述語論理の導出）をこれ1枚で総整理'))))),
+    h('section.wrap', { style: { paddingBottom: '60px' } }, h('div.sheet-grid', sem, lawCard, cnf, lk, folEq, folRes)))
 }

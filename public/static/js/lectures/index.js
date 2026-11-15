@@ -7,15 +7,15 @@ import lec04 from './lec04.js'
 import lec05 from './lec05.js'
 import lec06 from './lec06.js'
 import lec07 from './lec07.js'
+import lec08 from './lec08.js'
 import lec12 from './lec12.js'
 import lec13 from './lec13.js'
 
-export const LECTURES = [lec01, lec02, lec03, lec04, lec05, lec06, lec07, lec12, lec13]
+export const LECTURES = [lec01, lec02, lec03, lec04, lec05, lec06, lec07, lec08, lec12, lec13]
 
 export const UPCOMING = [
-  { no: 8, title: '一階述語論理 — 導出(融合)原理', date: '11/13' },
   { no: 9, title: '一階述語論理 — シーケント計算，構文論', date: '11/20' },
-  { no: 10, title: '中間試験', date: '11/27', exam: true },
+  { no: 10, title: '中間試験', date: '11/27', exam: true, href: '#/midterm' },
   { no: 11, title: '復習', date: '12/04' },
   { no: 14, title: '期末試験', date: '01/08', exam: true },
 ]
@@ -31,7 +31,7 @@ export const SYLLABUS_SESSIONS = [
   { no: 7, date: '11/06', title: '一階述語論理 — エルブランの定理，単一化', mats: ['講義ノート', '演習問題'] },
   { no: 8, date: '11/13', title: '一階述語論理 — 導出(融合)原理', mats: ['講義ノート（第2部）'] },
   { no: 9, date: '11/20', title: '一階述語論理 — シーケント計算，構文論', mats: ['講義ノート（第2部）'] },
-  { no: 10, date: '11/27', title: '中間試験', exam: true, mats: [] },
+  { no: 10, date: '11/27', title: '中間試験（15:20–16:20 · 4号館401教室）', exam: true, href: '#/midterm', mats: ['中間試験案内（2026/11/13）', '範囲：第1回〜第8回（ex1〜ex8）', '持ち込み一切不可・記述式'] },
   { no: 11, date: '12/04', title: '復習', mats: [] },
   { no: 12, date: '12/11', title: '命題様相論理，時相論理', mats: ['講義ノート（第3部：非古典論理 1〜2章）'] },
   { no: 13, date: '12/18', title: '非古典論理，まとめ', mats: ['講義ノート（第3部：非古典論理 3章）'] },

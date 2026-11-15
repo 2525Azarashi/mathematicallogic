@@ -9,6 +9,7 @@ import { animateRoot, pageWipe, initCursor, intro, splitChars } from './lib/moti
 import { reviewPage } from './pages/review.js'
 import { exercisesPage } from './pages/exercises.js'
 import { syllabusPage } from './pages/syllabus.js'
+import { midtermPage } from './pages/midterm.js'
 import { skeleton, closeSheet } from './lib/patterns.js'
 import { siteSource, siteItems, openTerm, updateBadge } from './lib/features.js'
 
@@ -19,6 +20,7 @@ const nav = h('header.nav', h('div.wrap.nav-in',
     h('a', { href: '#/', dataset: { r: 'home' } }, 'ホーム'),
     h('a', { href: `#/lec/${([...LECTURES].reverse().find((l) => !l.preview && l.no <= 11) || LECTURES[LECTURES.length - 1]).slug}`, dataset: { r: 'lec' } }, '講義'),
     h('a', { href: '#/ex', dataset: { r: 'ex' } }, '演習解説'),
+    h('a.nav-exam', { href: '#/midterm', dataset: { r: 'midterm' } }, '🎯 中間試験'),
     h('a', { href: '#/tools', dataset: { r: 'tools' } }, 'ラボ'),
     h('a', { href: '#/sheet', dataset: { r: 'sheet' } }, 'チートシート'),
     h('a', { href: '#/glossary', dataset: { r: 'glossary' } }, '用語集'),
@@ -29,7 +31,7 @@ document.body.prepend(h('div.read-bar'), nav)
 splitChars(nav.querySelector('.bt'))
 document.body.append(h('footer.foot', h('div.wrap.foot-in',
   h('div.foot-cast', h('div.avs', h('div', { html: avatar('S', 'happy') }), h('div', { html: avatar('R', 'happy') })), h('span', 'またね！ — Tiny Tautology は「数理論理学（2026年度）」の非公式学習サイトです。正式な情報は講義ページを確認してください。')),
-  h('nav.foot-links', { 'aria-label': 'サイト情報' }, h('a', { href: '#/syllabus' }, 'シラバス'), h('a', { href: '#/ex' }, '演習解説'), h('a', { href: '#/sheet' }, 'チートシート'), h('a', { href: '#/glossary' }, '用語集')),
+  h('nav.foot-links', { 'aria-label': 'サイト情報' }, h('a', { href: '#/midterm' }, '中間試験対策'), h('a', { href: '#/syllabus' }, 'シラバス'), h('a', { href: '#/ex' }, '演習解説'), h('a', { href: '#/sheet' }, 'チートシート'), h('a', { href: '#/glossary' }, '用語集')),
   h('div.mono', `${LECTURES.length} lectures · ⊢ ⇔ ⊨`))))
 
 // ---------- command palette (fuzzy autocomplete) ----------
@@ -78,12 +80,13 @@ function route() {
     $('.read-bar').style.width = '0'
     $$('.nav-links a').forEach((x) => x.classList.toggle('on', x.dataset.r === (page || 'home')))
     $('#nav-links').classList.remove('open')
-    const titles = { tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', syllabus: 'シラバス' }
+    const titles = { tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', syllabus: 'シラバス', midterm: '中間試験対策（11/27）' }
     if (page === 'ex') { exercisesPage(app, a); document.title = '演習解説 ex1〜ex7 — Tiny Tautology' }
+    else if (page === 'midterm') { midtermPage(app); if (a && app._jump) requestAnimationFrame(() => app._jump(a)); document.title = '中間試験対策（11/27） — Tiny Tautology' }
     else if (page === 'lec') { lecturePage(app, a, b); const l = LECTURES.find((x) => x.slug === a); document.title = l ? `第${l.no}回 ${l.title} — Tiny Tautology` : 'Tiny Tautology' }
     else if (titles[page]) { ({ tools: toolsPage, sheet: sheetPage, glossary: glossaryPage, review: reviewPage, syllabus: syllabusPage })[page](app); document.title = `${titles[page]} — Tiny Tautology` }
     else { homePage(app); document.title = 'Tiny Tautology — 数理論理学 2026 の遊び場' }
-    if (!((page === 'lec' && b) || (page === 'ex' && a))) scrollTo(0, 0)
+    if (!((page === 'lec' && b) || (page === 'ex' && a) || (page === 'midterm' && a))) scrollTo(0, 0)
     const h1 = app.querySelector('[data-hero-h1]')
     if (h1) splitChars(h1)
     animateRoot(app, { fresh: true })
@@ -91,7 +94,7 @@ function route() {
     animateRoot(nav)
     updateBadge()
   }
-  const label = page === 'lec' ? (() => { const l = LECTURES.find((x) => x.slug === a); return l ? `第${l.no}回 ${l.title.replace(/^.*— /, '')}` : '' })() : ({ tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', ex: '演習解説', syllabus: 'シラバス' })[page] || 'Tiny Tautology'
+  const label = page === 'lec' ? (() => { const l = LECTURES.find((x) => x.slug === a); return l ? `第${l.no}回 ${l.title.replace(/^.*— /, '')}` : '' })() : ({ tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', ex: '演習解説', syllabus: 'シラバス', midterm: '中間試験対策' })[page] || 'Tiny Tautology'
   const color = page === 'lec' ? (LECTURES.find((x) => x.slug === a) || {}).color : null
   if (first) { first = false; intro().then(() => {}); render() } else {
     // skeleton screen: wipe covers → skeleton is revealed as the wipe peels away → real page fades in
@@ -106,9 +109,9 @@ function route() {
 let lastKey = ''
 addEventListener('hashchange', () => {
   const [, page, a, b] = location.hash.split('/')
-  const key = page === 'ex' ? 'ex' : `${page}/${a}`
+  const key = (page === 'ex' || page === 'midterm') ? page : `${page}/${a}`
   if (key === lastKey && page === 'lec') { if (b && app._jump) app._jump(b); return }
-  if (key === lastKey && page === 'ex') { if (a && app._jump) app._jump(a); return }
+  if (key === lastKey && (page === 'ex' || page === 'midterm')) { if (a && app._jump) app._jump(a); return }
   lastKey = key
   route()
 })
@@ -116,5 +119,5 @@ addEventListener('hashchange', () => {
 let lastY = 0
 addEventListener('scroll', () => { const y = scrollY; nav.classList.toggle('hide', y > 300 && y > lastY + 4); if (y < lastY - 4 || y < 300) nav.classList.remove('hide'); lastY = y }, { passive: true })
 initCursor()
-lastKey = (() => { const [, p, a] = (location.hash || '#/').split('/'); return p === 'ex' ? 'ex' : `${p}/${a}` })()
+lastKey = (() => { const [, p, a] = (location.hash || '#/').split('/'); return (p === 'ex' || p === 'midterm') ? p : `${p}/${a}` })()
 route()

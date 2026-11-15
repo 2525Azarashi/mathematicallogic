@@ -58,7 +58,7 @@ export function syllabusPage(root) {
         h('td',
           s.exam ? h('b', '📝 ' + s.title) : h('b', s.title),
           s.mats && s.mats.length ? h('div.sy-at', { style: { marginTop: '4px' } }, ...s.mats.map((m) => h('span.chip', { style: { fontSize: '11px', padding: '0 7px', background: 'var(--paper)' } }, m))) : null),
-        h('td', liveLec ? h('a.chip', { href: `#/lec/${liveLec.slug}`, style: { background: liveLec.color } }, '講義ページ →') : s.exam ? h('span.chip.muted', '試験') : h('span.chip.muted', past ? 'プリント待ち' : '準備中')))
+        h('td', liveLec ? h('a.chip', { href: `#/lec/${liveLec.slug}`, style: { background: liveLec.color } }, '講義ページ →') : s.href ? h('a.chip', { href: s.href, style: { background: '#ffd23f' } }, '🎯 対策ページ →') : s.exam ? h('span.chip.muted', '試験') : h('span.chip.muted', past ? 'プリント待ち' : '準備中')))
     })))
 
   const goals = h('div.sy-goals', ...GOALS.map((g, i) => h('div.sy-goal.reveal',
