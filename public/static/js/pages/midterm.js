@@ -80,9 +80,9 @@ const ESSENTIAL_ROUTE = [
     why: '第7〜8回は部品が多く見えますが、実は**「恒真を示したい ⇒ 否定して冠頭形・Skolem化 ⇒ 節集合 ⇒ 単一化(mgu)で導出 ⇒ $\\bot$」という1本のパイプライン**です。各部品の典型例を1題ずつ通せば迷いません。',
     mustDo: [
       { label: '有限領域 $D=\\{1,2\\}$ での $[[∀x…]]_I, [[∃x…]]_I$ の理由つき評価', ref: 'ex7.1・第6回 6.B', href: '#/ex/ex7' },
-      { label: '冠頭形 → Skolem化（前の $∀$ の変数を引数にする）と定数なし時の $H_0=\\{a\\}$', ref: '第7回ノート例題', href: '#/lec/lec07/skolem' },
+      { label: '冠頭形 → Skolem化（前の $∀$ の変数を引数にする）と定数なし時の $H_0=\\{a\\}$', ref: 'ex8.1 / ex8.3・第7回', href: '#/ex/ex8' },
       { label: 'エルブラン領域 $H$・基底 $HB$・基礎例（$∀$ を外して代入）の書き分け', ref: 'ex7.2', href: '#/ex/ex7' },
-      { label: '単一化 mgu（不一致集合・出現検査）＋ 1階導出での反駁証明', ref: '第7〜8回例題', href: '#/lec/lec08/refute' },
+      { label: '単一化 mgu（不一致集合・衝突・出現検査）＋ 1階導出での反駁証明', ref: 'ex8.2 / ex8.4', href: '#/ex/ex8' },
     ],
     template: '<b>記述の決めゼリフ：</b>「式 $F$ の否定 $¬F$ をとり Skolem 化（充足不能性を保持）して節集合を作る → 親節の共通変数を分離し mgu $\\sigma = \\{…\\}$ で導出 → 空節 $\\bot$ が出たので健全性より $¬F$ は充足不能、よって $F$ は恒真」',
   },
@@ -505,7 +505,7 @@ $A$ が恒真 $\\Leftrightarrow$ <b>任意の解釈 $I$</b> で $[[A]]_I = ⊤$�
 </ul>`,
   },
   {
-    id: 'e8-2', lec: 8, badge: '第8回 総合演習 (ex8相当)', kind: 'ex', star: true,
+    id: 'e8-2', lec: 8, badge: '第8回 講義総合例題', kind: 'lec', star: true,
     title: '1階述語論理の導出（反駁）による恒真性証明の完全テンプレート',
     href: '#/lec/lec08/refute',
     q: '導出原理（反駁）を用いて，次の論理式が恒真であることを証明せよ：<br>(1) $∀x(\\mathrm{Human}(x) ⊃ \\mathrm{Mortal}(x)) ∧ \\mathrm{Human}(s) ⊃ \\mathrm{Mortal}(s)$（ソクラテス）<br>(2) $∀x(P(x) ⊃ Q(x)) ∧ ∃xP(x) ⊃ ∃xQ(x)$（Skolem定数が出る型）',
@@ -523,6 +523,36 @@ $= ∀x(¬\\mathrm{Human}(x) ∨ \\mathrm{Mortal}(x)) ∧ \\mathrm{Human}(s) ∧
 <li>冠頭形 $∃y∀x∀z((¬P(x) ∨ Q(x)) ∧ P(y) ∧ ¬Q(z))$ とし，$∃y$ の前に $∀$ がないので新しい <b>Skolem 定数 $c$</b> で置き換えて節集合にする：① $¬P(x) ∨ Q(x)$，② $P(c)$，③ $¬Q(z)$．</li>
 <li>①と②より mgu $\\{x := c\\}$ で <b>④ $Q(c)$</b> を導出 → ③と④より mgu $\\{z := c\\}$ で <b>⑤ $\\bot$</b> を導出．Skolem 化の正当性と導出原理の健全性より否定式は充足不能，ゆえに元の式は<b>恒真</b>．∎</li>
 </ol>`,
+  },
+  {
+    id: 'e8-3', lec: 8, badge: '公式演習 ex8.1 · ex8.3', kind: 'ex', star: true,
+    title: '同値な冠頭形への変換（変数導入）と 2変数 Skolem 化',
+    href: '#/ex/ex8',
+    q: '(1) (i) $∀xP(x) ∨ ∀xQ(x)$，(ii) $¬∃xP(x) ∧ ∀xQ(x)$ を論理的同値な冠頭形に変換せよ（ex8.1）．<br>(2) $∀x∀y∃z∃w(P(x, y) ∨ Q(x, z) ∨ R(z, w))$ を Skolem 化せよ（ex8.3）．',
+    point: '(1) $∀$ は $∨$ に分配不可なので**別変数 $y$ を導入して**前に出す！ $¬∃x$ は $∀x¬$ に反転。(2) $∃z, ∃w$ の前に $∀x, ∀y$ の2つがあるため、**互いに異なる新しい2引数関数 $f(x,y), g(x,y)$** で置き換える！',
+    why: `<ul>
+<li><b>(1) ex8.1 冠頭形：</b><br>
+・<b>(i)</b> 右の束縛変数を $y$ につけかえて $∀xP(x) ∨ ∀yQ(y)$ とし，量化記号を前に出して <b>$∀x∀y(P(x) ∨ Q(y))$</b>（$∀x(P(x)∨Q(x))$ は同値でないため誤り！）．<br>
+・<b>(ii)</b> ド・モルガン則で $∀x¬P(x) ∧ ∀xQ(x)$ とし，別変数 $y$ で <b>$∀x∀y(¬P(x) ∧ Q(y))$</b>（または $∀$ と $∧$ の分配で <b>$∀x(¬P(x) ∧ Q(x))$</b> としても同値で正解）．</li>
+<li><b>(2) ex8.3 Skolem 化：</b>冠頭で $∃z, ∃w$ の前にある全称記号はいずれも $∀x, ∀y$ の 2 つ．よって別々の新しい 2 引数 Skolem 関数記号 $f, g$ を用意し，$z$（2 箇所）を $f(x,y)$，$w$ を $g(x,y)$ に置き換えて $∃z∃w$ を除き，<b>$∀x∀y(P(x, y) ∨ Q(x, f(x, y)) ∨ R(f(x, y), g(x, y)))$</b>．</li>
+</ul>`,
+  },
+  {
+    id: 'e8-4', lec: 8, badge: '公式演習 ex8.2 · ex8.4', kind: 'ex', star: true,
+    title: '単一化の可否判定（mgu・衝突）と 4節集合の導出反駁',
+    href: '#/ex/ex8',
+    q: '(1) (i) $P(x, y)$ と $P(a, f(b))$，(ii) $P(x, f(x))$ と $P(f(y), f(b))$ は単一化可能か？ 可能なら mgu，不可能なら理由を示せ（ex8.2）．<br>(2) 節集合 $\\{P(x) ∨ Q(x),\\ ¬P(f(a)),\\ ¬Q(f(y)) ∨ R(y),\\ ¬R(z)\\}$ が充足不能であることを導出原理で示せ（ex8.4）．',
+    point: '(1)(ii) は第1引数の $\\{x := f(y)\\}$ を第2引数の $f(x)$ に反映すると $f(f(y))$ と $f(b)$ になり、**$f(y)$ と $b$（関数と定数）の衝突**で単一化不能！(2) は残りのリテラルにも毎回 mgu を適用して $\\bot$ までつなぐ！',
+    why: `<ul>
+<li><b>(1) ex8.2 単一化：</b><br>
+・<b>(i) 単一化可能</b>：不一致を左から解消して <b>mgu $\\sigma = \\{x := a,\\ y := f(b)\\}$</b>．<br>
+・<b>(ii) 単一化不可能</b>：第 1 引数を一致させるため $\\{x := f(y)\\}$ を適用すると $P(f(y), f(f(y)))$ と $P(f(y), f(b))$ となり，第 2 引数の内側で不一致集合 $\\{f(y), b\\}$ が生じる．$f(y)$ は関数記号 $f$ の項，$b$ は定数記号でどちらも変数ではないため（記号の衝突），いかなる代入でも一致しない．</li>
+<li><b>(2) ex8.4 導出反駁：</b>節を (1)〜(4) とおくと，<br>
+・(1) $P(x)∨Q(x)$ と (2) $¬P(f(a))$ より mgu $\\{x := f(a)\\}$ で <b>(5) $Q(f(a))$</b> を導出．<br>
+・(5) $Q(f(a))$ と (3) $¬Q(f(y))∨R(y)$ より mgu $\\{y := a\\}$ で <b>(6) $R(a)$</b> を導出．<br>
+・(6) $R(a)$ と (4) $¬R(z)$ より mgu $\\{z := a\\}$ で <b>(7) $\\bot$（空節）</b> を導出．<br>
+空節 $\\bot$ が導出されたので，導出原理の健全性よりこの節集合は<b>充足不能</b>である．∎</li>
+</ul>`,
   },
 ]
 
@@ -592,12 +622,12 @@ const SCOPE_ITEMS = [
     ],
   },
   {
-    id: 'm8', no: 8, title: '1階述語論理 — 導出(融合)原理', ex: 'ex8（第8回）', exHref: '#/lec/lec08/ex', lecHref: '#/lec/lec08',
+    id: 'm8', no: 8, title: '1階述語論理 — 導出(融合)原理', ex: 'ex8', exHref: '#/ex/ex8', lecHref: '#/lec/lec08',
     color: '#3b82f6',
     must: [
-      '恒真性を示したい式 $F$ を **① 否定 $¬F$ → ② 冠頭形 → ③ Skolem 化 → ④ CNF → ⑤ 節集合** に変換できる',
-      '2つの節に共通変数があれば先に**変数をつけかえて分離**し、符号が逆のリテラル対を **mgu $\\sigma$** で単一化して導出節 $(C\' ∨ D\')\\sigma$ を作れる',
-      '空節 $\\bot$ を導き、「導出原理の健全性より節集合は充足不能、よって元の論理式 $F$ は恒真」と筋道立てて記述できる',
+      '変数名のつけかえとド・モルガン則で論理的同値な**冠頭形**に変換し、前の全 $∀$ を引数とする別々の関数で **Skolem 化**できる（ex8.1 / ex8.3）',
+      '2式の単一化可否を判定し、可能なら **mgu**、不可能なら第1引数の代入反映後の不一致（記号の衝突・出現検査）を理由として書ける（ex8.2）',
+      '節集合に導出原理を適用し、親節番号と **mgu $\\sigma$** を明記して**空節 $\\bot$** を導き、健全性から充足不能（否定前なら恒真）を結論できる（ex8.4）',
     ],
   },
 ]
@@ -842,7 +872,7 @@ function comprehensiveExamplesSection(onMasteryChange) {
   deckReady = true
 
   const LEC_BTNS = [
-    ['all', `全25題`],
+    ['all', `全${ALL_EXAMPLES.length}題`],
     ['star', `★ エッセンシャル厳選 (${ALL_EXAMPLES.filter((e) => e.star).length})`],
     [1, '第1回'],
     [2, '第2回'],
@@ -1233,7 +1263,7 @@ export function midtermPage(root) {
           h('a.btn.sm.yellow', { href: '#/midterm/intuition', onclick: (e) => { e.preventDefault(); jump('intuition') } }, '🧠 直感→本質 高速理解ラボ'),
           h('a.btn.sm', { href: '#/midterm/route', onclick: (e) => { e.preventDefault(); jump('route') } }, '🩺 30秒弱点診断＆最短ルート'),
           h('a.btn.sm', { href: '#/midterm/writing', onclick: (e) => { e.preventDefault(); jump('writing') } }, '✍️ 記述穴埋め＆添削ラボ'),
-          h('a.btn.sm', { href: '#/midterm/examples', onclick: (e) => { e.preventDefault(); jump('examples') } }, '⚡ 口頭即答カード＆全25例題'),
+          h('a.btn.sm', { href: '#/midterm/examples', onclick: (e) => { e.preventDefault(); jump('examples') } }, `⚡ 口頭即答カード＆全${ALL_EXAMPLES.length}例題`),
           h('button.btn.sm', { type: 'button', onclick: () => window.print() }, '🖨 試験前まとめ印刷'))),
       cdBadge))
 
@@ -1244,7 +1274,7 @@ export function midtermPage(root) {
     ['intuition', '直感→本質 高速理解ラボ'],
     ['route', '弱点診断＆エッセンシャルルート'],
     ['writing', '記述穴埋め＆減点添削ラボ'],
-    ['examples', '口頭即答カード＆全25例題'],
+    ['examples', `口頭即答カード＆全${ALL_EXAMPLES.length}例題`],
     ['traps', '混同しやすい8大対比表'],
     ['scope', '第1〜8回 到達チェック'],
     ['mock', '60分タイマー＆予想問題'],
@@ -1275,7 +1305,7 @@ export function midtermPage(root) {
     talk(`R: 中間試験の案内が出ました！ 持ち込み不可で 60 分、しかも成績の **40%**…どこから手をつければ高得点が狙えますか？
 S[happy]: 案内文に最大のヒントが書いてあるよ！ 「**特に演習問題と授業中に行った例題を中心に復習してください**」「**必要な定義は大体記述しますので、覚えるのではなくなぜこうなるのか説明ができるように**」って。
 R[wow]: 丸暗記じゃなくて、「授業の例題と演習問題で、なぜそうなるかを定義から説明する力」がそのまま点になるんですね！
-S: そう！ このページに **最短で高得点を狙う4フェーズのエッセンシャルルート** と **第1〜8回の全例題・演習25題の網羅チェック** をまとめたから、上から順番に潰していこう。当日は **15:10 着席厳守** だよ！`),
+S: そう！ このページに **最短で高得点を狙う4フェーズのエッセンシャルルート** と **第1〜8回の全例題・公式演習（ex1〜ex8すべて）の網羅チェック** をまとめたから、上から順番に潰していこう。当日は **15:10 着席厳守** だよ！`),
     html(`<div class="mt-info-grid reveal">
       <div class="mt-icard hi"><span class="k">DATE &amp; TIME</span><b>11月27日(金) 15:20 – 16:20</b><small>60 分間 ／ <b>遅くとも 15:10 には着席</b>すること</small></div>
       <div class="mt-icard"><span class="k">CLASSROOM</span><b>4号館 401教室</b><small>いつもの教室・座席案内に注意</small></div>
@@ -1339,9 +1369,9 @@ S[happy]: そこが記述式の一番の壁だね！ まずは下の **「記述
     syncProgress()
   })
   main.append(h('section.chap', { id: 'c-examples', dataset: { id: 'examples' } },
-    h('div.chap-head.reveal', h('span.n', '6'), h('h2', '授業中の例題・公式演習 網羅的確認（全25題）', h('small', 'Exhaustive review of lecture examples & ex1–ex8'))),
-    talk(`R: 案内文の「**特に演習問題と授業中に行った例題を中心に、なぜこうなるのか説明ができるように**」を1ページで全部チェックできる一覧がほしかったです！
-S[happy]: 第1回〜第8回の **公式演習（ex1〜ex8相当）と授業ノートの重要例題・ひっかけ例を全25題** 漏れなく収録したよ。時間がなければまず **「★ エッセンシャル厳選」** フィルタを押して、自分の口で「なぜそうなるか」を説明してから答えを開いてみて！`),
+    h('div.chap-head.reveal', h('span.n', '6'), h('h2', `授業中の例題・公式演習 網羅的確認（全${ALL_EXAMPLES.length}題・ex8収録）`, h('small', 'Exhaustive review of lecture examples & official ex1–ex8'))),
+    talk(`R: 案内文の「**特に演習問題と授業中に行った例題を中心に、なぜこうなるのか説明ができるように**」を、最新の **ex8** まで1ページで全部チェックできる一覧がほしかったです！
+S[happy]: 第1回〜第8回の **公式演習（ex1〜ex8 全問）と授業ノートの重要例題・ひっかけ例を全${ALL_EXAMPLES.length}題** 漏れなく収録したよ。時間がなければまず **「★ エッセンシャル厳選」** フィルタを押して、自分の口で「なぜそうなるか」を説明してから答えを開いてみて！`),
     exCatalogEl))
 
   // ---------- Section 7: 混同しやすい8大対比マトリクス ----------
@@ -1388,7 +1418,7 @@ S[happy]: 記述試験の失点の8割は、まさにその **「似ている2�
     h('p.sy-lead.reveal', '各回の到達スキルを確認してチェックを入れよう（ブラウザに自動保存されます）。'),
     scopeList,
     h('div.sy-links.reveal', { style: { marginTop: '16px' } },
-      h('a.btn.sm.yellow', { href: '#/ex' }, '✎ ex1〜ex7 の全演習解説を一気に見る →'),
+      h('a.btn.sm.yellow', { href: '#/ex' }, '✎ ex1〜ex8 の全演習解説を一気に見る →'),
       h('a.btn.sm', { href: '#/sheet' }, '≡ チートシート（第1〜8回対応）で公式を確認 →'),
       h('a.btn.sm', { href: '#/review' }, '★ 自分の復習リストを開く →'))))
 
