@@ -3,6 +3,7 @@ import { folInput } from '../widgets/fol-input.js'
 import { parseFol, folHTML, showFol } from '../logic/fol.js'
 import { clausify, parseClause } from '../logic/fol-proof.js'
 import { clauseHTML, folResBoard } from '../widgets/fol-widgets.js'
+import { EX8 } from '../data/ex8.js'
 import { toto } from '../lib/chars.js'
 
 const F = (s) => `<span class="fx fol">${folHTML(parseFol(s))}</span>`
@@ -20,6 +21,7 @@ function folResCompareInfo() {
 // ---------- Lab 1: 1階の導出ボード（プリセットつき） ----------
 function resLab() {
   const PRESETS = [
+    ['公式演習 ex8.4', ['P(x) ∨ Q(x)', '¬P(f(a))', '¬Q(f(y)) ∨ R(y)', '¬R(z)']],
     ['三段論法（ソクラテス）', ['¬Human(x) ∨ Mortal(x)', 'Human(s)', '¬Mortal(s)']],
     ['f で2段つなぐ', ['P(a)', '¬P(x) ∨ P(f(x))', '¬P(f(f(a)))']],
     ['2引数述語・関係', ['R(a, b)', '¬R(x, y) ∨ R(y, x)', '¬R(b, a)']],
@@ -134,20 +136,10 @@ S[happy]: 第 3 回とまったく同じ！ **$F₁, …, Fₙ$ と、結論の�
     },
   ],
   exercises: [
+    ...EX8.map((p) => ({ no: p.no, q: p.q, hint: p.hint, answer: p.answer(), extra: (p.extra || []).map(([l, b]) => [l, b()]) })),
     {
       no: '8.A',
-      q: '（中間試験対策・練習問題）次の節集合から導出原理を用いて空節 ⊥ を導き，充足不能であることを示せ．　(1) ¬P(x) ∨ Q(x, f(x))　(2) ¬Q(a, y) ∨ R(y)　(3) P(a)　(4) ¬R(f(a))',
-      hint: '(1) と (3) を mgu {x := a} で導出 → 出てきた Q(a, f(a)) と (2) を mgu {y := f(a)} で導出 → 最後に (4) とぶつける。',
-      answer: `<ol class="pt-steps">
-<li>(1) と (3) より，$P(x)$ と $P(a)$ の mgu $\\sigma₁ = \\{x := a\\}$ を用いて <b>(5) $Q(a, f(a))$</b> を導出．</li>
-<li>(2) と (5) より，$Q(a, y)$ と $Q(a, f(a))$ の mgu $\\sigma₂ = \\{y := f(a)\\}$ を用いて <b>(6) $R(f(a))$</b> を導出．</li>
-<li>(4) と (6) より，$R(f(a))$ と $¬R(f(a))$（mgu $\\sigma₃ = \\{\\}$）から <b>(7) $\\bot$（空節）</b> を導出．</li>
-</ol>
-<p>空節 $\\bot$ が導出されたので，導出原理の健全性より与えられた節集合は<b>充足不能</b>である．∎</p>`,
-    },
-    {
-      no: '8.B',
-      q: '（中間試験対策・練習問題）導出原理（反駁）を用いて，論理式 ∀x(P(x) ⊃ Q(x)) ∧ ∃x P(x) ⊃ ∃x Q(x) が恒真であることを証明せよ．',
+      q: '（自習用・中間試験対策）導出原理（反駁）を用いて，論理式 ∀x(P(x) ⊃ Q(x)) ∧ ∃x P(x) ⊃ ∃x Q(x) が恒真であることを証明せよ．',
       hint: '① 式全体を否定すると ∀x(P(x) ⊃ Q(x)) ∧ ∃x P(x) ∧ ¬∃x Q(x)。② ∃x P(x) を Skolem 定数 c で P(c) にする（¬∃x Q(x) は ∀x ¬Q(x) なので Skolem 化不要！）。③ 3 つの節から ⊥ を出す。',
       answer: `<p><b>1. 否定して節集合へ変換する</b></p>
 <ol class="pt-steps">

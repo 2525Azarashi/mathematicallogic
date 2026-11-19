@@ -1,5 +1,5 @@
 // ============================================================
-//  演習解説ページ  #/ex , #/ex/<ex1..ex7>
+//  演習解説ページ  #/ex , #/ex/<ex1..ex8>
 //  各問題を「考え方（対話）→ ヒント → 解答例 → 採点ポイント → よくあるミス → ラボ」で並べる
 // ============================================================
 import { h, talk, rich, fxs, tv, lab, callout, store, $$ } from '../lib/ui.js'
@@ -15,6 +15,7 @@ import { staticTree } from '../widgets/proof-static.js'
 import { EX5 } from '../data/ex5.js'
 import { EX6 } from '../data/ex6.js'
 import { EX7 } from '../data/ex7.js'
+import { EX8 } from '../data/ex8.js'
 import { saveButton, linkTerms } from '../lib/features.js'
 import { splitChars } from '../lib/motion.js'
 
@@ -22,6 +23,7 @@ import { splitChars } from '../lib/motion.js'
 const SEE = { '1.1': ['lec01', 'set'], '1.2': ['lec01', 'power'], '1.3': ['lec01', 'rel'], '2.1': ['lec02', 'syntax'], '2.2': ['lec02', 'sem'], '2.3': ['lec02', 'valid'], '3.1': ['lec03', 'imp'], '3.2': ['lec03', 'clause'], '3.3': ['lec03', 'res'], '4.1': ['lec04', 'lk'], '4.2 (1)': ['lec04', 'proof'], '4.2 (2)': ['lec04', 'proof'] }
 const SEE6 = { '6.1': ['lec06', 'syntax'], '6.2': ['lec06', 'bind'], '6.3': ['lec06', 'lang'] }
 const SEE7 = { '7.1': ['lec07', 'eq'], '7.2': ['lec07', 'herbrand'] }
+const SEE8 = { '8.1': ['lec07', 'skolem'], '8.2': ['lec07', 'unify'], '8.3': ['lec07', 'skolem'], '8.4': ['lec08', 'res-rule'] }
 const LABS = {
   '2.2': ['🧪 真理値表を触る', () => truthTable([parse('(P ∧ Q) ∨ ¬P'), parse('¬Q ⊃ ¬P')], { columns: 'all' }).el],
   '3.2': ['🧪 CNF 変換を 1 手ずつ', () => cnfStepper(parse('¬(P ∧ (Q ∨ R))'))],
@@ -31,6 +33,7 @@ const LABS = {
 }
 
 function problemsOf(set) {
+  if (set.no === 8) return EX8.map((p) => ({ ...p, see: SEE8[p.no] }))
   if (set.no === 7) return EX7.map((p) => ({ ...p, see: SEE7[p.no] }))
   if (set.no === 6) return EX6.map((p) => ({ ...p, see: SEE6[p.no] }))
   if (set.no === 5) return EX5
@@ -80,7 +83,7 @@ export function exercisesPage(root, anchor) {
   const total = sets.reduce((n, s) => n + s.probs.length, 0)
   const next = [...sets].reverse().find((s) => s.due > now)
 
-  const title = h('h1', h('span.xp-title-t', '演習解説'), h('span.sub', 'ex1〜ex7 を「考え方 → 解答例 → 採点ポイント」で'))
+  const title = h('h1', h('span.xp-title-t', '演習解説'), h('span.sub', 'ex1〜ex8 を「考え方 → 解答例 → 採点ポイント」で'))
   splitChars(title.firstChild)
   const hero = h('section.lec-hero.wrap', { 'data-scroll': '' }, h('div.ghost-word', { 'aria-hidden': 'true' }, 'EX'),
     h('div.crumbs', h('a', { href: '#/' }, 'ホーム'), '／', '演習解説'),
@@ -99,7 +102,7 @@ export function exercisesPage(root, anchor) {
   main.append(h('section.chap', { id: 'c-tips', dataset: { id: 'tips' } },
     h('div.chap-head.reveal', h('span.n', '✓'), h('h2', '答案の書き方 5 か条', h('small', 'How to write a full-score answer'))),
     talk(`R: 演習、提出したあとに「結局どう書けば満点だったの？」ってモヤモヤするんですよね。
-S[happy]: じゃあここで振り返ろう。各問題を **考え方 → ヒント → 解答例 → 採点ポイント → よくあるミス** の順に並べたよ。最新の ex7 も解説つき。
+S[happy]: じゃあここで振り返ろう。各問題を **考え方 → ヒント → 解答例 → 採点ポイント → よくあるミス** の順に並べたよ。最新の **ex8（中間試験範囲ラスト！）** も全4問ラボつきで解説してるよ。
 R: 解答例は、自分で解いてから開く…ですよね。
 S: その通り。ボタンを押すまで隠してあるから、まずヒントだけ見て手を動かしてね。`),
     h('div.xp-tips', ...REPORT_TIPS.map(([t, d], i) => h('div.xp-tip.reveal', h('span.i', String(i + 1)), h('b', t), h('p', { html: rich(d) }))))))
@@ -114,6 +117,11 @@ S: その通り。ボタンを押すまで隠してあるから、まずヒン�
         h('span.chip', `${s.probs.length} 問`),
         ...s.tags.map((t) => h('span.chip.tag', t)),
         lec ? h('a.chip.link', { href: `#/lec/${lec.slug}` }, `第${lec.no}回の講義ページ →`) : h('span.chip', { style: { opacity: .7 } }, '講義ページは準備中')))
+    if (s.no === 8) {
+      sec.append(talk(`R: ex8 は 8.1 が冠頭形、8.2 が単一化（mgu）、8.3 が Skolem 化、8.4 が 1 階の導出（反駁）…まさに第 7〜8 回と**中間試験クライマックスの総まとめ**ですね！
+S[happy]: そう！ 8.1(i) の「$∀$ と $∨$ は変数を分けてから前に出す」、8.2(ii) の「第 1 引数の代入を第 2 引数にも反映して $f(y)$ と $b$ の衝突を見抜く」、8.3 の「前の全 $∀$ を引数にした別々の Skolem 関数 $f(x,y), g(x,y)$」、そして 8.4 の「mgu を毎段明記して $\\bot$ を出す」——この 4 問を自分の言葉で書ければ中間試験の後半パートは盤石だよ！`))
+      if (s.due > now) sec.append(callout('warn', `<b>締切前の課題です（${fmt(s.due)}）。</b>まず「考え方」「ヒント」「ラボ」で自分の解答を組み立ててから、解答例と採点ポイントで答え合わせしよう。`))
+    }
     if (s.no === 7) {
       sec.append(talk(`R: ex7 は 7.1 が解釈 I のもとでの真偽値、7.2 がエルブラン領域・基底・基礎例ですね。
 S: そう！ 7.1 は「**∀ は ∨ に分配できない**」ことを具体的なモデルで体感する問題。7.2 は「**項だけで作った世界 H**」と「**原子論理式の集合 HB**」と「**変数を消した基礎例**」の 3 つの定義を正確に書き分ける問題だよ。

@@ -81,7 +81,7 @@ function route() {
     $$('.nav-links a').forEach((x) => x.classList.toggle('on', x.dataset.r === (page || 'home')))
     $('#nav-links').classList.remove('open')
     const titles = { tools: '論理式ラボ', sheet: 'チートシート', glossary: '用語集', review: '復習リスト', syllabus: 'シラバス', midterm: '中間試験対策（11/27）' }
-    if (page === 'ex') { exercisesPage(app, a); document.title = '演習解説 ex1〜ex7 — Tiny Tautology' }
+    if (page === 'ex') { exercisesPage(app, a); document.title = '演習解説 ex1〜ex8 — Tiny Tautology' }
     else if (page === 'midterm') { midtermPage(app); if (a && app._jump) requestAnimationFrame(() => app._jump(a)); document.title = '中間試験対策（11/27） — Tiny Tautology' }
     else if (page === 'lec') { lecturePage(app, a, b); const l = LECTURES.find((x) => x.slug === a); document.title = l ? `第${l.no}回 ${l.title} — Tiny Tautology` : 'Tiny Tautology' }
     else if (titles[page]) { ({ tools: toolsPage, sheet: sheetPage, glossary: glossaryPage, review: reviewPage, syllabus: syllabusPage })[page](app); document.title = `${titles[page]} — Tiny Tautology` }

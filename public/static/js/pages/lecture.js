@@ -4,6 +4,7 @@ import { LECTURES, dueOf } from '../lectures/index.js'
 import { EXSETS } from '../data/exsets.js'
 import { quiz, exercise } from '../widgets/quiz.js'
 import { LEC_INFO, lecStats } from '../widgets/infographic.js'
+import { lectureEssenceBanner } from '../widgets/intuition.js'
 import { splitChars } from '../lib/motion.js'
 import { linkTerms, saveButton } from '../lib/features.js'
 
@@ -58,7 +59,8 @@ S[happy]: まずは自分で。詰まったら「ヒント」、それでもダ�
   // 用語を自動リンク → タップでボトムシート
   linkTerms(main)
 
-  root.append(hero, h('div.wrap.lec-layout', toc, main))
+  const lensBanner = lectureEssenceBanner(lec.slug)
+  root.append(hero, lensBanner || '', h('div.wrap.lec-layout', toc, main))
 
   // progress tracking
   const seen = new Set(store.get('seen:' + lec.slug, []))
